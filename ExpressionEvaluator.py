@@ -9,28 +9,48 @@ def evaluate(expressionString):
 
 def consume(stream):
 	numberConsumer = NumberConsumer()
-	operandConsumer = OperandConsumer()
-	binaryOperandConsumer = BinaryOperandConsumer( numberConsumer, operandConsumer )
-
- 	result = binaryOperandConsumer.consume(stream)
-	if result == False:
-		print "Error consuming stream"
-	else:
-		print result.evaluate()
+	operatorConsumer = OperatorConsumer()
+	binaryOperandConsumer = BinaryOperandConsumer( numberConsumer, operatorConsumer )
+	expressionConsumer = ExpressionConsumer(binaryOperandConsumer)	
+	
+	print( expressionConsumer.consume(stream).evaluate() )
 
 
+class ExpressionConsumer:
+	def __init__(self, binaryOperandConsumer): 
+		self.__binaryOperandConsumer = binaryOperandConsumer
+	
+	def consume(self, stream):			
+		result = self.__binaryOperandConsumer.consume(stream)
+		print result
+
+		while stream.hasChars():		
+			nextResult = self.__binaryOperandConsumer.consume(stream)	
+			if not nextResult: break
+			else: result = nextResult			
+		return result
+	
 class BinaryOperandConsumer:
-	def __init__(self, numberConsumer, operandConsumer):
+	def __init__(self, numberConsumer, operatorConsumer):
 		self.__numberConsumer = numberConsumer
-		self.__operandConsumer = operandConsumer
+		self.__operatorConsumer = operatorConsumer
 		pass
 	
-	def consume(self, stream):	
-		operandA = self.__numberConsumer.consume(stream)		
+	def consume(self, stream):
+		print "Checking operator"	
+		operator = self.__operatorConsumer.consume(stream)
+		if not operator:
+			print "Is not operator. Checking is number"
+			operandA = self.__numberConsumer.consume(stream)		
+		else:
+			print "Is operator"			
+			operandA = self.__previousExpression
+		
 		if operandA == False:
+			print "Is not number"
 			return False
-		operator = self.__operandConsumer.consume(stream)
-
+		if not operator:
+			operator = self.__operatorConsumer.consume(stream)
 		if operator == False:
 			return False
 		
@@ -38,8 +58,10 @@ class BinaryOperandConsumer:
 		
 		if operandB == False:
 			return False
-		return BinaryOperandExpression(operandA, operator, operandB)
 		
+		self.__previousExpression = BinaryOperandExpression(operandA, operator, operandB)	
+		print "Consumed"
+		return self.__previousExpression
 
 	def __isSingleDigitNum(self, char):
 		return char in string.digits
@@ -48,7 +70,7 @@ class BinaryOperandConsumer:
 		result = char == '-'
 		return result
 
-class OperandConsumer:
+class OperatorConsumer:
 	def __init__(self):
 		pass
 	
@@ -126,6 +148,10 @@ class BinaryOperandExpression:
 		self.__operandA = operandA
 		self.__operator = operator
 		self.__operandB = operandB
+
+	def setLeftOperand(self, evaluatable):
+		self.__operandA = evaluatable
+
 	def evaluate(self):
 		return self.__operator.evaluate()(self.__operandA.evaluate(),self.__operandB.evaluate())
 
@@ -160,7 +186,7 @@ class DivideOperand:
 		return lambda a,b: 0 if b == 0 else a/b
 
 
-evaluate("-10/3")
+evaluate("1+1*2/2-1")
 	
 
 
