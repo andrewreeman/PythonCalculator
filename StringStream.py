@@ -9,7 +9,6 @@ class StringStream:
 
 	def next(self):		
 		nextChar = self.__stream.read(1)
-		print "Next char " + nextChar
 		return nextChar
 	
 	def peek(self):
@@ -18,7 +17,6 @@ class StringStream:
 		return char
 	
 	def hasChars(self):
-		print "Has chars"
 		char = self.peek()
 		return not char == ""
 	

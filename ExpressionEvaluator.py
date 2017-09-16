@@ -21,8 +21,7 @@ class ExpressionConsumer:
 		self.__binaryOperandConsumer = binaryOperandConsumer
 	
 	def consume(self, stream):			
-		result = self.__binaryOperandConsumer.consume(stream)
-		print result
+		result = self.__binaryOperandConsumer.consume(stream)	
 
 		while stream.hasChars():		
 			nextResult = self.__binaryOperandConsumer.consume(stream)	
@@ -37,31 +36,38 @@ class BinaryOperandConsumer:
 		pass
 	
 	def consume(self, stream):
-		print "Checking operator"	
+		# is next token is an operator then left operand is set to previous expression
 		operator = self.__operatorConsumer.consume(stream)
-		if not operator:
-			print "Is not operator. Checking is number"
-			operandA = self.__numberConsumer.consume(stream)		
-		else:
-			print "Is operator"			
-			operandA = self.__previousExpression
 		
-		if operandA == False:
-			print "Is not number"
-			return False
-		if not operator:
+		# if not then it must be a number and we have a complete expression such as 2+2 or 3*476
+		if not operator:			
+			operandA = self.__numberConsumer.consume(stream)
 			operator = self.__operatorConsumer.consume(stream)
-		if operator == False:
-			return False
+			
+			if operator == False:
+				return False		
+
+			operandB = self.__numberConsumer.consume(stream)
+				
+			if operandB == False:
+				return False
 		
-		operandB = self.__numberConsumer.consume(stream)
+			self.__previousExpression = BinaryOperandExpression(operandA, operator, operandB)			
+			return self.__previousExpression
+		# if next token is an operator then we must chain to a previous expression
+		else:				
+			operandA = self.__previousExpression	
+			if operandA == False:		
+				return False
+			
+			operandB = self.__numberConsumer.consume(stream)
+				
+			if operandB == False:
+				return False
 		
-		if operandB == False:
-			return False
-		
-		self.__previousExpression = BinaryOperandExpression(operandA, operator, operandB)	
-		print "Consumed"
-		return self.__previousExpression
+			self.__previousExpression = BinaryOperandExpression(operandA, operator, operandB)			
+			return self.__previousExpression
+
 
 	def __isSingleDigitNum(self, char):
 		return char in string.digits
@@ -80,13 +86,13 @@ class OperatorConsumer:
 		token = stream.next()
 
 		if token == '+':
-			return AddOperand()
+			return AddOperator()
 		elif token == '-':
-			return SubtractOperand()
+			return SubtractOperator()
 		elif token == '*':
-			return MultiplyOperand()
+			return MultiplyOperator()
 		elif token == '/':
-			return DivideOperand()
+			return DivideOperator()
 		
 
 	def __canConsume(self, stream):
@@ -110,8 +116,7 @@ class NumberConsumer:
 		
 		if isNegative:
 			stream.next()
-
-		print isNegative
+		
 		numberToken = self.__consumeNumber(stream)		
 		return NumberExpression(numberToken, isNegative)
 	
@@ -155,6 +160,12 @@ class BinaryOperandExpression:
 	def evaluate(self):
 		return self.__operator.evaluate()(self.__operandA.evaluate(),self.__operandB.evaluate())
 
+	def chain(self, other):
+			
+	
+	def isOtherLowerPrecedence(self, other):
+		return other.__operator.precedence < self.__operator.precedence
+
 class NumberExpression:
 	def __init__(self, char, isNegative):
 		self.__char = char
@@ -167,26 +178,54 @@ class NumberExpression:
 		else:
 			return number
 
-class AddOperand:
+class AddOperator:
 	def __init__(self): pass
 	
 	def evaluate(self):
-		return lambda a, b: a + b 	
+		return lambda a, b: a + b 
+
+	def precedence:
+		return 1
 
 
-class SubtractOperand:
+class SubtractOperator:
 	def evaluate(self):
 		return lambda a, b: a - b
 
-class MultiplyOperand:
+	def precedence:
+		return 0
+
+class MultiplyOperator:
 	def evaluate(self):
 		return lambda a,b: a * b
-class DivideOperand:
+
+	def precedence:
+		return 2
+
+class DivideOperator:
 	def evaluate(self):
-		return lambda a,b: 0 if b == 0 else a/b
+		return lambda a,b: 0 if b == 0 else a/b	
+
+	def precedence:
+		return 3
 
 
 evaluate("1+1*2/2-1")
+evaluate("3+2*4")
+evaluate("3+12/3*5") #23
+
+3+12
+12/3
+this should be l:3+r:(12/3)
+# 3+12 has a lower precedence than 12/3 so we make the right operand of 3+12 be 12/3 making: 3+(12/3)
+
+
+3*5
+this should be: l:3 + r:(5*(12/3))
+# 12/3 has a higher precendece than 3*5 so we swap the operands of ... no this is bullshit
+
+what we should do is simply work out which operand to evaluate first when evaluating depending on precedence...obviously?
+and should start evaluatiom from right most expression
 	
 
 
