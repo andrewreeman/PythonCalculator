@@ -2,10 +2,8 @@ from StringStream import StringStream
 from Parsers import *
 
 def evaluate(expressionString):
-	print "Evaluating expression %s " % expressionString
-	
 	stream = StringStream(expressionString)
-	consume(stream)
+	return consume(stream)
 
 def consume(stream):
 	numberConsumer = NumberConsumer()
@@ -13,7 +11,7 @@ def consume(stream):
 	binaryOperandConsumer = BinaryOperandConsumer( numberConsumer, operatorConsumer )
 	expressionConsumer = ExpressionConsumer(binaryOperandConsumer)	
 	
-	print( expressionConsumer.consume(stream).evaluate() )
+	return expressionConsumer.consume(stream).evaluate() 
 
 
 class ExpressionConsumer:
