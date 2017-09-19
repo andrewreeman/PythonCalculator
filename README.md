@@ -14,6 +14,7 @@ http://www.mathsisfun.com/algebra/operations-order-calculator.html?i=7-4*8%2B3-4
 
 
 3+2*4
+10 - 10 / 5 + 3
 
 1. Read token. 
 2. If number then put in number stack.
@@ -39,11 +40,29 @@ Create Node From Stack
 	pop operator stack, make this the operator
 	pop number stack, make this left operand
 	make node the root
-   Else if number stack count matches the operator stack count then:
+   Else if number stack and operator stack are size of one AND is currently popping stack then:
 	pop number stack, make this the left operand
 	pop operator stack, make this the operator
 	make right operand the previous root node
 	make node the root
+   Else if number stack and operator stack are size of one AND is not currently popping stack then:
+	pop number stack, make this the right operand,
+	pop operator stack, make this the operator,
+	make left operand the previous root node
+	make node the root
+   Else if number stack and operator stack are equal:
+	pop number stack, make this the right operand
+	pop operator stack, make this the operator
+	pop number stack, make this the left operand
+	make new node
+
+	make a new empty node the root node
+	make left operand the existing root node
+	make right operand the new tree
+	pop operator from stack and add to operator of new node
+
+
+
 
 
 
