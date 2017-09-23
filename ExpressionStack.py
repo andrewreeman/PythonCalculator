@@ -115,7 +115,7 @@ class ExpressionStack:
 
 	def popNumber(self, number):
 		if self.__numberStack:
-			return self.python __numberStack.pop()
+			return self.__numberStack.pop()
 
 	def isOperatorStackEmpty(self):
 		return self.operatorStackSize() == 0
