@@ -1,29 +1,35 @@
 from ExpressionEvaluator import *
 import ExpressionStack
-from termcolor import colored
+import utils 
 
-def PrintTestResult(success):
-	if success:
-		print colored('Pass', 'green')
-	else:
-		print colored('Fail', 'red')
 
-def Test(expression, expectedResult):
-	print "\nEvaluating expression %s. Expecting result to be %d " % (expression, expectedResult)
 
-	result = evaluate(expression)
-	print "Result is %d" % result
+
+def createTest(expression, expectedResult):
 	
-	PrintTestResult( result == expectedResult )
-
+	testName = "Evaluating expression %s. Expecting result to be %d " % (expression, expectedResult)
+	
+	def f():
+		result = evaluate(expression)
+		if not result == expectedResult:
+			return "Result is: %s" % str(result)
+						
+	return utils.Test(testName, f)
 
 
 def main():
-	print "Expression tests"
-	Test("1+1*2/2-1", 1)
-	Test("3+2*4", 11)
-	Test("3+12/3*5", 23)
-	Test("7-4*8+3-4/2", -24)
+	tester = utils.Tester("Expression tests")
+	
+	test1 = createTest("1+1*2/2-1", 1)
+	test2 = createTest("3+2*4", 11)
+	test3 = createTest("3+12/3*5", 23)
+	test4 = createTest("7-4*8+3-4/2", -24)
+
+	
+	for t in [test1, test2, test3, test4]:
+		tester.addTest(t)
+
+	tester.perform()
 
 
 
