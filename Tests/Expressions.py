@@ -3,8 +3,6 @@ import ExpressionStack
 import utils 
 
 
-
-
 def createTest(expression, expectedResult):
 	
 	testName = "Evaluating expression %s. Expecting result to be %d " % (expression, expectedResult)
