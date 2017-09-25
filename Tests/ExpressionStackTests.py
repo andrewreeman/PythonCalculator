@@ -75,7 +75,7 @@ def testExpressionStackOperations():
 	
 	def test7Minus4Times8Tree(tree):
 		if not tree:
-				return "No root node created"
+			return "No root node created"
 			
 		if tree.leftOperand() != 7:
 			return "Root node left operand does not equal 7. Instead it equals: " + str(tree.leftOperand())
@@ -101,42 +101,99 @@ def testExpressionStackOperations():
 			newRootNode = make7Minus4Times8Tree(stack)
 			return test7Minus4Times8Tree(newRootNode)
 
-		return utils.Test("Test that we can join a node as the right operand to the stack", f)
+		return utils.Test("Test that we can join a node as the right to an expression", f)
 	tester.addTest(testCanJoinANodeAsRightOperand())
+
+
+	def make7Minus4Times8Plus3Tree(stack):
+		stack = expstack.ExpressionStack()		
+		originalRootNode = make7Minus4Times8Tree(stack)
+		fail = test7Minus4Times8Tree(originalRootNode)
+			
+		if fail:	
+			raise ValueError(fail)		
+
+		stack.pushNumber(3)
+		stack.pushOperator('+')
+
+		_logic = logic.ExpressionStackLogic()
+		return _logic.popJoiningRootNodeToLeftOperand(stack, originalRootNode)
+	
+	def test3PlusTree(tree):
+		if not tree:
+			return "No new root created"
+
+		if tree.rightOperand() != 3:
+			return "New root node's right operand does not equal 3. Instead it equals: " + str(newRootNode.rightOperand())
+
+		if tree.operator() != '+':
+			return "New root node's operator does not equal '+'. Instead it equals: " + str(newRootNode.operator())
+
+		leftOperand = tree.leftOperand()
+
+		return test7Minus4Times8Tree(leftOperand)
 
 	def testCanJoinANodeAsLeftOperand():
 		def f():			
-			stack = expstack.ExpressionStack()		
-			originalRootNode = make7Minus4Times8Tree(stack)
-			fail = test7Minus4Times8Tree(originalRootNode)
-				
-			if fail:
-				return fail
-
-			stack.pushNumber(3)
-			stack.pushOperator('+')
-
-			_logic = logic.ExpressionStackLogic()
-			newRootNode = _logic.popJoiningRootNodeToLeftOperand(stack, originalRootNode)
-
-			if not newRootNode:
-				return "No new root created"
-
-			if newRootNode.rightOperand() != 3:
-				return "New root node's right operand does not equal 3. Instead it equals: " + str(newRootNode.rightOperand())
-
-			if newRootNode.operator() != '+':
-				return "New root node's operator does not equal '+'. Instead it equals: " + str(newRootNode.operator())
-
-			leftOperand = newRootNode.leftOperand()
-
-			return test7Minus4Times8Tree(leftOperand)
+			try:
+				stack = expstack.ExpressionStack()								
+				newRootNode = make7Minus4Times8Plus3Tree(stack)
+				return test3PlusTree(newRootNode)				
+			except ValueError as err:
+				return str(err)
 			
-
-		return utils.Test("Test that we can join a node as the left operand to the stack", f)
+		return utils.Test("Test that we can join a node as the left operand to an expression", f)
 	tester.addTest(testCanJoinANodeAsLeftOperand())	
-	
+
+	def testCanJoinTwoNodesWithOperator():			
+		def f():			
+			try:
+				stack = expstack.ExpressionStack()								
+				newRootNode = make7Minus4Times8Plus3Tree(stack)
+				fail = test3PlusTree(newRootNode)				
+				
+				if fail:
+					raise ValueError(fail)
+				
+				stack.pushNumber(4)
+				stack.pushNumber(2)
+				stack.pushOperator('/')
+
+				_logic = logic.ExpressionStackLogic()
+				
+				rightNode = _logic.popRootNode(stack)
+
+				stack.pushOperator('-')
+				newTree = _logic.popOperatorAndJoinNodes(stack, newRootNode, rightNode)
+				
+				if not newTree:
+					return "No new tree returned"
+
+
+				if newTree.operator() != '-':
+					return "New tree operator does not equal '-'. Instead it equals: " + str(newTree.operator())
+
+				if newTree.rightOperand().operator() != '/':
+					return "New tree right operand operator does not equal '/'. Instead it equals: " + str(newTree.rightOperand().operator())
+
+				if newTree.rightOperand().leftOperand() != 4:
+					return "New tree right operand left operand does not equal 4. Instead it equals: " +str(newTree.rightOperand().leftOperand())
+
+				if newTree.rightOperand().rightOperand() != 2:
+					return "New tree right operand right operand does not equal 2. Instead it equals: " +str(newTree.rightOperand().rightOperand())  
+
+				leftNode = newTree.leftOperand()
+				
+				return test3PlusTree(leftNode)
+
+
+
 		
+			except ValueError as err:
+				return str(err)
+			
+		return utils.Test("Test that we can join two nodes to an expression", f)
+	tester.addTest(testCanJoinTwoNodesWithOperator())			
 	tester.perform()
 
 
