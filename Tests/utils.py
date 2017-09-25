@@ -16,8 +16,18 @@ class Tester:
 
 	
 	def perform(self):
+		print "\n=== " + self.__name + " ===\n"
+		
+		passCount = 0
+
 		for test in self.__tests:
-			 Result( test.perform() )
+			success = test.perform()
+		 	Result(success)
+			
+			if success:
+				passCount += 1
+
+		print "%d/%d passed" % (passCount, len(self.__tests))
 
 
 

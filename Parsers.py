@@ -1,6 +1,6 @@
 import string
 
-from Operators import *
+from operators import *
 import expressions
 
 class OperatorConsumer:
