@@ -59,7 +59,6 @@ class ExpressionStackLogic:
 	
 	def isTopOperatorStackLowerPrecedence(self, expressionStack, operator):
 		topOperator = expressionStack.peekOperator()
-		
 		if topOperator:
 			return topOperator.isLowerPrecedenceThan(operator)
 		else:

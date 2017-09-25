@@ -40,4 +40,5 @@ class DivideOperator:
 		return isOperatorLowerPrecedenceThanOtherOperator(self, operator)
 
 def isOperatorLowerPrecedenceThanOtherOperator(operatorA, operatorB):
-	return operatorA < operatorB
+	result = operatorA.precedence() < operatorB.precedence()
+	return result
