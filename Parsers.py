@@ -1,7 +1,7 @@
 import string
 
 from Operators import *
-from Expressions import *
+import expressions
 
 class OperatorConsumer:
 	def __init__(self):
@@ -45,7 +45,7 @@ class NumberConsumer:
 			stream.next()
 		
 		numberToken = self.__consumeNumber(stream)		
-		return NumberExpression(numberToken, isNegative)
+		return expressions.NumberExpression(numberToken, isNegative)
 	
 
 	def __consumeNumber(self, stream):

@@ -1,5 +1,6 @@
 from ExpressionEvaluator import *
-import ExpressionStack
+import expressionstack as espstack
+import expressionstacklogic as logic
 import utils
 
 def testExpressionStackOperations():
@@ -18,7 +19,7 @@ def testExpressionStackOperations():
 	
 	def testCorrectOperatorSizeReported():
 		def f():
-			stack = ExpressionStack.ExpressionStackThing()
+			stack = espstack.ExpressionStack()
 			stack.pushOperator(operatorDummy)	
 			stack.pushOperator(operatorDummy2)
 			stack.pushOperator(operatorDummy3)
@@ -27,11 +28,42 @@ def testExpressionStackOperations():
 				return "Operator stack size does not equal 3. Instead it equals: %d" % stack.operatorStackSize()
 		return utils.Test("Test that correct operator size is reported", f)	
 
+		
 	tester.addTest(testCorrectOperatorSizeReported())	
-	tester.perform()
+
+
+	def testCanExpressionStackLogicPopCorrectRootNode():
+		def f():
+			stack = espstack.ExpressionStack()
+			stack.pushNumber(1)
+			stack.pushNumber(2)
+			stack.pushOperator("+")
+			
+			_logic = logic.ExpressionStackLogic()
+
+			rootNode = _logic.popRootNode(stack)
+
+			if not rootNode:
+				return "No root node created"
+			
+			if rootNode.leftOperand() != 1:
+				return "Root node left operand does not equal 1. Instead it equals: " + str(rootNode.leftOperand())
+
+			if rootNode.rightOperand() != 2:
+				return "Root node right operand does not equal 2. Instead it equals: " + str(rootNode.rightOperand())
+
+			if rootNode.operator() != "+":
+				return "Root node operator does not equal '+'. Instead it equals: " + rootNode.operator()
+		
+
+			
+		return utils.Test("Test that an expression stack logic instance will create a correct root node", f)
 	
+	tester.addTest( testCanExpressionStackLogicPopCorrectRootNode() )
+	tester.perform()
 
-
+	_logic = logic.ExpressionStackLogic()
+	
 
 def main():
 	testExpressionStackOperations()

@@ -1,5 +1,5 @@
 
-class ExpressionStackThing:
+class ExpressionStack:
 	def __init__(self): 
 		self.__operatorStack = list()
 		self.__numberStack = list()
@@ -20,7 +20,7 @@ class ExpressionStackThing:
 		else:
 			return None
 
-	def popNumber(self, number):
+	def popNumber(self):
 		if self.__numberStack:
 			return self.__numberStack.pop()
 

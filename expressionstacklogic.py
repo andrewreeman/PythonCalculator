@@ -1,4 +1,4 @@
-import Expressions
+import expressions
 
 class ExpressionParser:
 	def __init__(self, expressionStack, expressionStackLogic, numberParser, operatorParser):
@@ -29,13 +29,7 @@ class ExpressionParser:
 						self.__createNodeFromStack()
 
 		self.__createNodeFromStack()
-
-
-				
-		
-		
-		
-		
+											
 		
 class ExpressionStackLogic:
 	def __init__(self):
@@ -48,7 +42,7 @@ class ExpressionStackLogic:
 	def popRootNode(self, expressionStack):
 		rightOperand = expressionStack.popNumber()
 		leftOperand = expressionStack.popNumber()
-		return self.popOperatorAndJoinNodes(expressionStack, leftOperand, rightOperandNode)
+		return self.popOperatorAndJoinNodes(expressionStack, leftOperand, rightOperand)
 
 	def popJoiningRootNodeToRightOperand(self, expressionStack, oldRootNode):
 		leftOperand = expressionStack.popNumber()
@@ -62,7 +56,7 @@ class ExpressionStackLogic:
 		operator = expressionStack.popOperator()
 
 		if operator and leftNode and rightNode:
-			return BinaryOperandExpression(leftNode, operator, rightNode)
+			return expressions.BinaryOperandExpression(leftNode, operator, rightNode)
 	
 	def isTopOperatorStackLowerPrecedence(self, expressionStack, operator):
 		topOperator = expressionStack.peekOperator()

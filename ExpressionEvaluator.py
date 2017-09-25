@@ -1,5 +1,6 @@
 from StringStream import StringStream
 from Parsers import *
+import expressions
 
 def evaluate(expressionString):
 	stream = StringStream(expressionString)
@@ -50,7 +51,7 @@ class BinaryOperandConsumer:
 			if operandB == False:
 				return False
 		
-			self.__previousExpression = BinaryOperandExpression(operandA, operator, operandB)			
+			self.__previousExpression = expressions.BinaryOperandExpression(operandA, operator, operandB)			
 			return self.__previousExpression
 		# if next token is an operator then we must chain to a previous expression
 		else:				
@@ -63,7 +64,7 @@ class BinaryOperandConsumer:
 			if operandB == False:
 				return False
 		
-			self.__previousExpression = BinaryOperandExpression(operandA, operator, operandB)			
+			self.__previousExpression = expressions.BinaryOperandExpression(operandA, operator, operandB)			
 			return self.__previousExpression
 
 
