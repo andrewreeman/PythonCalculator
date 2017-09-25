@@ -61,41 +61,80 @@ def testExpressionStackOperations():
 		return utils.Test("Test that an expression stack logic instance will create a correct root node", f)
 	
 	tester.addTest( testCanExpressionStackLogicPopCorrectRootNode() )
-	
-	def testCanJoinANodeAsRightOperand():
-		def f():
-			stack = expstack.ExpressionStack()
-			_logic = logic.ExpressionStackLogic()
-			rootNode = exp.BinaryOperandExpression(4, '*', 8)			
-			
-			stack.pushNumber(7)
-			stack.pushOperator('-')
+		
 
-			newRootNode = _logic.popJoiningRootNodeToRightOperand(stack, rootNode)
+	def make7Minus4Times8Tree(stack):
+		_logic = logic.ExpressionStackLogic()
+		rootNode = exp.BinaryOperandExpression(4, '*', 8)			
+		
+		stack.pushNumber(7)
+		stack.pushOperator('-')
+
+		return _logic.popJoiningRootNodeToRightOperand(stack, rootNode)
 			
-			if not rootNode:
+	
+	def test7Minus4Times8Tree(tree):
+		if not tree:
 				return "No root node created"
 			
-			if newRootNode.leftOperand() != 7:
-				return "Root node left operand does not equal 7. Instead it equals: " + str(newRootNode.leftOperand())
+		if tree.leftOperand() != 7:
+			return "Root node left operand does not equal 7. Instead it equals: " + str(tree.leftOperand())
 
-			if not newRootNode.rightOperand():
-				return "Root node has no right operand."
+		if not tree.rightOperand():
+			return "Root node has no right operand."
 
-			if newRootNode.rightOperand().leftOperand() != 4:
-				return "Root node's right operand node's left operand does not equal 4. Instead it equals: " + str(newRootNode.rightOperand().leftOperand())
+		if tree.rightOperand().leftOperand() != 4:
+			return "Root node's right operand node's left operand does not equal 4. Instead it equals: " + str(tree.rightOperand().leftOperand())
 
-			if newRootNode.rightOperand().rightOperand() != 8:
-				return "Root node's right operand node's right operand does not equal 8. Instead it equals: " + str(newRootNode.rightOperand().rightOperand())
+		if tree.rightOperand().rightOperand() != 8:
+			return "Root node's right operand node's right operand does not equal 8. Instead it equals: " + str(tree.rightOperand().rightOperand())
 
-			if newRootNode.rightOperand().operator() != '*':
-				return "Root node's right operand node's operator does not equal '*'. Instead it equals: " + str(newRootNode.rightOperand().operator())
+		if tree.rightOperand().operator() != '*':
+			return "Root node's right operand node's operator does not equal '*'. Instead it equals: " + str(tree.rightOperand().operator())
 
-			if newRootNode.operator() != '-':
-				return "Root node's operator does not equal '-'. Instead it equals: " + str(newRootNode.operator())
+		if tree.operator() != '-':
+			return "Root node's operator does not equal '-'. Instead it equals: " + str(tree.operator())
+		
+	def testCanJoinANodeAsRightOperand():
+		def f():	
+			stack = expstack.ExpressionStack()		
+			newRootNode = make7Minus4Times8Tree(stack)
+			return test7Minus4Times8Tree(newRootNode)
 
 		return utils.Test("Test that we can join a node as the right operand to the stack", f)
 	tester.addTest(testCanJoinANodeAsRightOperand())
+
+	def testCanJoinANodeAsLeftOperand():
+		def f():			
+			stack = expstack.ExpressionStack()		
+			originalRootNode = make7Minus4Times8Tree(stack)
+			fail = test7Minus4Times8Tree(originalRootNode)
+				
+			if fail:
+				return fail
+
+			stack.pushNumber(3)
+			stack.pushOperator('+')
+
+			_logic = logic.ExpressionStackLogic()
+			newRootNode = _logic.popJoiningRootNodeToLeftOperand(stack, originalRootNode)
+
+			if not newRootNode:
+				return "No new root created"
+
+			if newRootNode.rightOperand() != 3:
+				return "New root node's right operand does not equal 3. Instead it equals: " + str(newRootNode.rightOperand())
+
+			if newRootNode.operator() != '+':
+				return "New root node's operator does not equal '+'. Instead it equals: " + str(newRootNode.operator())
+
+			leftOperand = newRootNode.leftOperand()
+
+			return test7Minus4Times8Tree(leftOperand)
+			
+
+		return utils.Test("Test that we can join a node as the left operand to the stack", f)
+	tester.addTest(testCanJoinANodeAsLeftOperand())	
 	
 		
 	tester.perform()

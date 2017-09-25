@@ -46,7 +46,6 @@ class ExpressionStackLogic:
 
 	def popJoiningRootNodeToRightOperand(self, expressionStack, oldRootNode):
 		leftOperand = expressionStack.popNumber()
-		print leftOperand
 		return self.popOperatorAndJoinNodes(expressionStack, leftOperand, oldRootNode)
 
 	def popJoiningRootNodeToLeftOperand(self, expressionStack, oldRootNode):
@@ -55,7 +54,6 @@ class ExpressionStackLogic:
 
 	def popOperatorAndJoinNodes(self, expressionStack, leftNode, rightNode):
 		operator = expressionStack.popOperator()
-		print leftNode
 		if operator and leftNode and rightNode:
 			return expressions.BinaryOperandExpression(leftNode, operator, rightNode)
 	
