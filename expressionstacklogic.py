@@ -29,6 +29,38 @@ class ExpressionParser:
 						self.__createNodeFromStack()
 
 		self.__createNodeFromStack()
+
+	def __createNodeFromStack(self, tree = None, orphan = None):
+		logic = self.__logic
+		stack = self.__stack
+
+		if not tree:
+			logic.setIsPoppingStack(False) #todo: if popping stack state just depends on an existence of a tree then just use that instead
+		
+		if stack.isOperatorStackEmpty():
+			return tree
+
+		elif orphan:
+			rootNode = logic.popOperatorAndJoinNodes(tree, orphan
+			return self.__createNodeFromStack(rootNode, None)
+
+		elif logic.isNumberStackCountGreaterThanOperatorStackCount(stack):
+			logic.setIsPoppingStack(True)
+			rootNode = logic.popRootNode(stack)
+			return self.__createNodeFromStack(rootNode, None)
+
+		elif logic.areBothStacksSizeOfOneAndCurrentlyPoppingStack(stack):
+			rootNode = logic.popJoiningRootNodeToRightOperand(stack, tree)
+			return self.__createNodeFromStack(rootNode, None)
+
+		elif logic.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(stack):
+			rootNode = logic.popJoiningRootNodeToLeftOperand(stack, tree)
+			return self.__createNodeFromStack(rootNode, None)
+
+		elif logic.areBothStacksEqualSize(stack):
+			orphan = logic.popRootNode(stack)
+			return self.__createNodeFromStack(rootNode, orphan)
+		
 											
 		
 class ExpressionStackLogic:
@@ -66,7 +98,7 @@ class ExpressionStackLogic:
 
 	def isNumberStackCountGreaterThanOperatorStackCount(self, expressionStack):
 		return expressionStack.numberStackSize() > expressionStack.operatorStackSize()
-
+	
 	def areBothStacksEqualSize(self, expressionStack):
 		return expressionStack.numberStackSize() == expressionStack.operatorStackSize()
 	

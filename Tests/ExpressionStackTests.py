@@ -3,7 +3,6 @@ import expressionstack as expstack
 import expressionstacklogic as logic
 import expressions as exp
 import utils
-import operators as ops
 
 def testExpressionStackOperations():
 	tester = utils.Tester("Expression stack operation tests")
@@ -178,10 +177,10 @@ def testExpressionStackOperations():
 					return "New tree right operand operator does not equal '/'. Instead it equals: " + str(newTree.rightOperand().operator())
 
 				if newTree.rightOperand().leftOperand() != 4:
-					return "New tree right operand left operand does not equal 4. Instead it equals: " + str(newTree.rightOperand().leftOperand())
+					return "New tree right operand left operand does not equal 4. Instead it equals: " +str(newTree.rightOperand().leftOperand())
 
 				if newTree.rightOperand().rightOperand() != 2:
-					return "New tree right operand right operand does not equal 2. Instead it equals: " + str(newTree.rightOperand().rightOperand())  
+					return "New tree right operand right operand does not equal 2. Instead it equals: " +str(newTree.rightOperand().rightOperand())  
 
 				leftNode = newTree.leftOperand()
 				
@@ -194,53 +193,7 @@ def testExpressionStackOperations():
 				return str(err)
 			
 		return utils.Test("Test that we can join two nodes to an expression", f)
-	tester.addTest(testCanJoinTwoNodesWithOperator())	
-
-
-	def testCanCheckPrecedenceOfOperatorsOnStack():
-		def f():
-			stack = expstack.ExpressionStack()	
-			
-			addOp = ops.AddOperator()
-			subOp = ops.SubtractOperator()
-			multOp = ops.MultiplyOperator()
-			divOp = ops.DivideOperator()
-
-			stack.pushOperator(multOp)
-			stack.pushOperator(divOp)
-			stack.pushOperator(subOp)
-			stack.pushOperator(addOp)
-
-			_logic = logic.ExpressionStackLogic()
-			if not _logic.isTopOperatorStackLowerPrecedence(stack, multOp):
-				return "Top operator on stack should be lower precedence than multiply  operator"
-
-			stack.popOperator()
-	
-			if not _logic.isTopOperatorStackLowerPrecedence(stack, addOp):
-				return "Top operator on stack should be higher precedence than add operator"
-
-			stack.popOperator()
-	
-			if _logic.isTopOperatorStackLowerPrecedence(stack, addOp):
-				return "Top operator on stack should be higher precedence than add operator"
-
-			stack.popOperator()
-	
-			if not _logic.isTopOperatorStackLowerPrecedence(stack, divOp):
-				return "Top operator on stack %s should be lower precedence than div operator" % str(stack.peekOperator())
-
-			stack.popOperator()
-			if not stack.isOperatorStackEmpty():
-				return "Operator stack should be empty"
-			
-
-			
-										
-
-		return utils.Test("Test that we can check correct precedence of operators on stack", f)
-			
-	tester.addTest(testCanCheckPrecedenceOfOperatorsOnStack())			
+	tester.addTest(testCanJoinTwoNodesWithOperator())			
 	tester.perform()
 
 
