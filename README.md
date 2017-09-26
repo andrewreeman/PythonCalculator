@@ -29,7 +29,7 @@ http://www.mathsisfun.com/algebra/operations-order-calculator.html?i=7-4*8%2B3-4
 						
 4. If empty stream then
 	while operator stack is not empty:
-		Create Node From Stack
+		Create Node From Stack and append this result to existing tree. ... where in the existing tree? wtf
 		
 
 

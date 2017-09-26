@@ -9,20 +9,21 @@ def createTest(expression, expectedResult):
 	testName = "Evaluating expression %s. Expecting result to be %d " % (expression, expectedResult)
 	
 	def f():      
-		return "This test fails"
-		# stream = strStr.StringStream(expression)
+		
+		stream = strStr.StringStream(expression)
 
 
-		# _logic = logic.ExpressionStackLogic()
-		# _stack = stack.ExpressionStack()
-		# _numberParser = Parsers.NumberParser()
-		# _operatorParser = Parsers.OperatorParser()
+		_logic = logic.ExpressionStackLogic()
+		_stack = stack.ExpressionStack()
+		_numberParser = Parsers.NumberParser()
+		_operatorParser = Parsers.OperatorParser()
 
-		# _expressionParser = logic.ExpressionParser(_stack, _logic, _numberParser, _operatorParser)
+		_expressionParser = logic.ExpressionParser(_stack, _logic, _numberParser, _operatorParser)
 
-		# result = _expressionParser.parse(stream)
-		# if not result == expectedResult:
-		# 	return "Result is: %s" % str(result)
+		result = _expressionParser.parse(stream)
+		if not result.evaluate() == expectedResult:
+			return "Result is: %s. \n object is: %s" % (str(result.evaluate()), str(result))
+
 
 	return utils.Test(testName, f)
 
@@ -30,10 +31,13 @@ def createTest(expression, expectedResult):
 def main():
 	tester = utils.Tester("Expression tests")
 
-	test1 = createTest("1+1", 2)
+	t1 = createTest("1+1", 2)
 
+	t2 = createTest("3+2*4", 11)
+	t3 = createTest("10-10/5+3", 11)
+	#t3 = createTest("10 - 10 / 5 + 3", 5)
 
-	for t in [test1]:
+	for t in [t1, t2, t3]:
 		tester.addTest(t)
 
 	tester.perform()

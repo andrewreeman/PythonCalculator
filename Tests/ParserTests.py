@@ -13,12 +13,9 @@ def createTest(expression):
 		_operatorParser = Parsers.OperatorParser()
 
 
-		number = _numberParser.parse(stream)
-		print number.evaluate()
-		operator = _operatorParser.parse(stream)
-		print operator.evaluate()
-		number = _numberParser.parse(stream)
-		print number.evaluate()
+		number = _numberParser.parse(stream)		
+		operator = _operatorParser.parse(stream)		
+		number = _numberParser.parse(stream)		
 
 		if stream.hasChars():
 			return "Stream should now be empty"

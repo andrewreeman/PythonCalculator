@@ -22,6 +22,9 @@ class OperatorParser:
 			return DivideOperator()
 		
 
+	def canConsume(self, stream):
+		return self.__canConsume(stream)		
+
 	def __canConsume(self, stream):
 		token = stream.peek()
 		return self.__isOperator(token)
@@ -44,24 +47,27 @@ class NumberParser:
 		if isNegative:
 			stream.next()
 		
-		numberToken = self.__consumeNumber(stream)		
+		numberToken = self.__consumeNumber(stream)	
+		print "Number token is: %s" % str(numberToken)	
 		return expressions.NumberExpression(numberToken, isNegative)
+
+	def canConsume(self, stream):
+		return self.__canConsume(stream)
+		
+	def __canConsume(self, stream):
+		token = stream.peek()	
+		print "Checking can consume: %s" % token
+		return self.__isSingleDigitNum(token) or self.__isNegativeSign(token)
 	
 
 	def __consumeNumber(self, stream):
 
 		if not self.__canConsumeDigit(stream):
 			return False
-		token = stream.next()
-		print "Token in consume number is: %s" % str(token)
+		token = stream.next()		
 		while self.__canConsumeDigit(stream):
 			token += stream.next()
-		return token
-		
-				
-	def __canConsume(self, stream):
-		token = stream.peek()	
-		return self.__isSingleDigitNum(token) or self.__isNegativeSign(token)
+		return token					
 	
 	def __canConsumeDigit(self, stream):
 		token = stream.peek()

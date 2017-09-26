@@ -35,3 +35,20 @@ class ExpressionStack:
 
 	def operatorStackSize(self):
 		return len(self.__operatorStack)
+
+	def __str__(self):
+		description = "Stack contents\n\tNumber stack: \n"
+
+		for n in reversed(self.__numberStack):
+			description += "\t%s\n" % str(n)
+
+		description += "\n\tOperator stack: \n"
+
+		for o in reversed(self.__operatorStack):
+			description += "\t%s\n" % str(o)
+
+
+
+		return description
+
+

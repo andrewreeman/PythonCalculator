@@ -20,7 +20,7 @@ class StringStream:
 		return char
 	
 	def hasChars(self):
-		char = self.peek()		
+		char = self.peek()			
 		return not char == ""
 	
 	def __stepBack(self):

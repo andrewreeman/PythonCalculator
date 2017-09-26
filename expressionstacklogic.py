@@ -1,4 +1,5 @@
 import expressions
+import pdb
 
 class ExpressionParser:
 	def __init__(self, expressionStack, expressionStackLogic, numberParser, operatorParser):
@@ -8,60 +9,83 @@ class ExpressionParser:
 		self.__logic = expressionStackLogic
 
 
-	def parse(self, stream):
+	def parse(self, stream):		
+		tree = None		
 
-		while stream.hasChars():
+	 	#pdb.set_trace()
+		while stream.hasChars():			
+			if not self.__numberParser.canConsume(stream) and not self.__operatorParser.canConsume(stream):
+				stream.next()
+				continue
+
 			numberToken = self.__numberParser.parse(stream)
 
-			if numberToken:
+			if numberToken:				
 				self.__stack.pushNumber(numberToken)
 
 			operatorToken = self.__operatorParser.parse(stream)
 
-			if operatorToken:
+			if operatorToken:				
 				if self.__stack.isOperatorStackEmpty():
 					self.__stack.pushOperator(operatorToken)
 				else:
-					if self.__logic.isTopOperatorStackLowerPrecedence(self.__stack, operator):
-						self.__stack.pushOperator(operator)
+					if self.__logic.isTopOperatorStackLowerPrecedence(self.__stack, operatorToken):
+						self.__stack.pushOperator(operatorToken)
+					else:
+						while not self.__stack.isOperatorStackEmpty():							
+							tree = self.__createNodeFromStack(0, tree)							
+						self.__stack.pushOperator(operatorToken)
+		
 
-					while not self.__stack.isOperatorStackEmpty:
-						self.__createNodeFromStack()
+		return self.__createNodeFromStack(0, tree)
 
-		self.__createNodeFromStack()
-
-	def __createNodeFromStack(self, tree = None, orphan = None):
-		logic = self.__logic
+	def __createNodeFromStack(self, depth, tree = None, orphan = None):
+		print "\nCreate node from stack called with tree: %s" % tree		
+		
+		logic = self.__logic		
 		stack = self.__stack
+		print stack
 
-		if not tree:
+		if depth == 0:
 			logic.setIsPoppingStack(False) #todo: if popping stack state just depends on an existence of a tree then just use that instead
 
+		print "Is currently popping stack: %s" % str(logic.isPoppingStack())
+		print "Depth is: %s" % str(depth)
+
 		if stack.isOperatorStackEmpty():
+			print "Operator stack is empty"
 			return tree
 
 		elif orphan:
+			print "We have an orphan"
+			
 			rootNode = logic.popOperatorAndJoinNodes(tree, orphan)
-			return self.__createNodeFromStack(rootNode, None)
+			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.isNumberStackCountGreaterThanOperatorStackCount(stack):
+			print "Number stack larger than operator stack"
+
 			logic.setIsPoppingStack(True)
 			rootNode = logic.popRootNode(stack)
-			return self.__createNodeFromStack(rootNode, None)
+			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.areBothStacksSizeOfOneAndCurrentlyPoppingStack(stack):
+			print "Both stacks have one and currently popping stack"
+
 			rootNode = logic.popJoiningRootNodeToRightOperand(stack, tree)
-			return self.__createNodeFromStack(rootNode, None)
+			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(stack):
+			print "Both stacks have one and currently not popping stack"
+
 			rootNode = logic.popJoiningRootNodeToLeftOperand(stack, tree)
-			return self.__createNodeFromStack(rootNode, None)
+			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.areBothStacksEqualSize(stack):
+			print "Both stacks are equal size"
+
 			orphan = logic.popRootNode(stack)
-			return self.__createNodeFromStack(rootNode, orphan)
-
-
+			return self.__createNodeFromStack(depth + 1, rootNode, orphan)
 
 class ExpressionStackLogic:
 	def __init__(self):
@@ -70,6 +94,8 @@ class ExpressionStackLogic:
 	def setIsPoppingStack(self, isPoppingStack):
 		self.__isPoppingStack = isPoppingStack
 
+	def isPoppingStack(self):
+		return self.__isPoppingStack
 
 	def popRootNode(self, expressionStack):
 		rightOperand = expressionStack.popNumber()
@@ -106,7 +132,7 @@ class ExpressionStackLogic:
 		return self.__isPoppingStack and self.areBothStacksSizeOfOne(expressionStack)
 
 	def areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(self, expressionStack):
-		return not self.__isPoppingStack and self.areBothStacksSizeOfOne()
+		return not self.__isPoppingStack and self.areBothStacksSizeOfOne(expressionStack)
 
 	def areBothStacksSizeOfOne(self, expressionStack):
 		return expressionStack.numberStackSize() == 1 and expressionStack.operatorStackSize() == 1

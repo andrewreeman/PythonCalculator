@@ -39,3 +39,6 @@ class NumberExpression:
 			return -number
 		else:
 			return number
+
+	def __str__(self):
+		return str(self.evaluate())
