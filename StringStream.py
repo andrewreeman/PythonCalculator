@@ -13,11 +13,14 @@ class StringStream:
 	
 	def peek(self):
 		char = self.next()
-		self.__stepBack()
+		
+		if not char == "":
+			self.__stepBack()
+		
 		return char
 	
 	def hasChars(self):
-		char = self.peek()
+		char = self.peek()		
 		return not char == ""
 	
 	def __stepBack(self):

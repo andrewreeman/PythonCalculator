@@ -3,11 +3,11 @@ import string
 from operators import *
 import expressions
 
-class OperatorConsumer:
+class OperatorParser:
 	def __init__(self):
 		pass
 	
-	def consume(self, stream):
+	def parse(self, stream):
 		if not self.__canConsume(stream):
 			return False
 		token = stream.next()
@@ -30,11 +30,11 @@ class OperatorConsumer:
 		return token == '+' or token == '-' or token == '*' or token == '/' or token == '^' or token == '%'
 	
 
-class NumberConsumer:
+class NumberParser:
 	def __init__(self):
 		pass
 
-	def consume(self, stream):
+	def parse(self, stream):
 		if not self.__canConsume(stream):
 			return False
 
@@ -53,6 +53,7 @@ class NumberConsumer:
 		if not self.__canConsumeDigit(stream):
 			return False
 		token = stream.next()
+		print "Token in consume number is: %s" % str(token)
 		while self.__canConsumeDigit(stream):
 			token += stream.next()
 		return token
@@ -61,6 +62,7 @@ class NumberConsumer:
 	def __canConsume(self, stream):
 		token = stream.peek()	
 		return self.__isSingleDigitNum(token) or self.__isNegativeSign(token)
+	
 	def __canConsumeDigit(self, stream):
 		token = stream.peek()
 		return self.__isSingleDigitNum(token)

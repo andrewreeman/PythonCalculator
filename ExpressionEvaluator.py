@@ -7,9 +7,9 @@ def evaluate(expressionString):
 	return consume(stream)
 
 def consume(stream):
-	numberConsumer = NumberConsumer()
-	operatorConsumer = OperatorConsumer()
-	binaryOperandConsumer = BinaryOperandConsumer( numberConsumer, operatorConsumer )
+	numberParser = NumberParser()
+	operatorParser = OperatorParser()
+	binaryOperandConsumer = BinaryOperandConsumer( numberParser, operatorParser )
 	expressionConsumer = ExpressionConsumer(binaryOperandConsumer)	
 	
 	return expressionConsumer.consume(stream).evaluate() 
@@ -36,17 +36,17 @@ class BinaryOperandConsumer:
 	
 	def consume(self, stream):
 		# is next token is an operator then left operand is set to previous expression
-		operator = self.__operatorConsumer.consume(stream)
+		operator = self.__operatorConsumer.parse(stream)
 		
 		# if not then it must be a number and we have a complete expression such as 2+2 or 3*476
 		if not operator:			
-			operandA = self.__numberConsumer.consume(stream)
-			operator = self.__operatorConsumer.consume(stream)
+			operandA = self.__numberConsumer.parse(stream)
+			operator = self.__operatorConsumer.parse(stream)
 			
 			if operator == False:
 				return False		
 
-			operandB = self.__numberConsumer.consume(stream)
+			operandB = self.__numberConsumer.parse(stream)
 				
 			if operandB == False:
 				return False
@@ -59,7 +59,7 @@ class BinaryOperandConsumer:
 			if operandA == False:		
 				return False
 			
-			operandB = self.__numberConsumer.consume(stream)
+			operandB = self.__numberConsumer.parse(stream)
 				
 			if operandB == False:
 				return False

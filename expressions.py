@@ -8,8 +8,8 @@ class BinaryOperandExpression:
 		self.__operandA = evaluatable
 
 	def leftOperand(self):
-		return self.__operandA
-	
+		return self.__operandA 
+
 	def rightOperand(self):
 		return self.__operandB
 
@@ -17,8 +17,8 @@ class BinaryOperandExpression:
 		return self.__operator
 
 	def evaluate(self):
-		return self.__operator.evaluate()(self.__operandA.evaluate(),self.__operandB.evaluate())			
-	
+		return self.__operator.evaluate()(self.__operandA.evaluate(),self.__operandB.evaluate())
+
 	def isOtherLowerPrecedence(self, other):
 		return other.__operator.precedence < self.__operator.precedence
 

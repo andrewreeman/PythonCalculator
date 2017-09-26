@@ -7,13 +7,13 @@ class ExpressionParser:
 		self.__stack = expressionStack
 		self.__logic = expressionStackLogic
 
-	
+
 	def parse(self, stream):
 
-		while stream.hasItems():
+		while stream.hasChars():
 			numberToken = self.__numberParser.parse(stream)
 
-			if numberToken:	
+			if numberToken:
 				self.__stack.pushNumber(numberToken)
 
 			operatorToken = self.__operatorParser.parse(stream)
@@ -25,7 +25,7 @@ class ExpressionParser:
 					if self.__logic.isTopOperatorStackLowerPrecedence(self.__stack, operator):
 						self.__stack.pushOperator(operator)
 
-					while not self.__stack.isOperatorStackEmpty:	
+					while not self.__stack.isOperatorStackEmpty:
 						self.__createNodeFromStack()
 
 		self.__createNodeFromStack()
@@ -36,12 +36,12 @@ class ExpressionParser:
 
 		if not tree:
 			logic.setIsPoppingStack(False) #todo: if popping stack state just depends on an existence of a tree then just use that instead
-		
+
 		if stack.isOperatorStackEmpty():
 			return tree
 
 		elif orphan:
-			rootNode = logic.popOperatorAndJoinNodes(tree, orphan
+			rootNode = logic.popOperatorAndJoinNodes(tree, orphan)
 			return self.__createNodeFromStack(rootNode, None)
 
 		elif logic.isNumberStackCountGreaterThanOperatorStackCount(stack):
@@ -60,9 +60,9 @@ class ExpressionParser:
 		elif logic.areBothStacksEqualSize(stack):
 			orphan = logic.popRootNode(stack)
 			return self.__createNodeFromStack(rootNode, orphan)
-		
-											
-		
+
+
+
 class ExpressionStackLogic:
 	def __init__(self):
 		self.__isPoppingStack = False
@@ -88,7 +88,7 @@ class ExpressionStackLogic:
 		operator = expressionStack.popOperator()
 		if operator and leftNode and rightNode:
 			return expressions.BinaryOperandExpression(leftNode, operator, rightNode)
-	
+
 	def isTopOperatorStackLowerPrecedence(self, expressionStack, operator):
 		topOperator = expressionStack.peekOperator()
 		if topOperator:
@@ -98,23 +98,15 @@ class ExpressionStackLogic:
 
 	def isNumberStackCountGreaterThanOperatorStackCount(self, expressionStack):
 		return expressionStack.numberStackSize() > expressionStack.operatorStackSize()
-	
+
 	def areBothStacksEqualSize(self, expressionStack):
 		return expressionStack.numberStackSize() == expressionStack.operatorStackSize()
-	
+
 	def areBothStacksSizeOfOneAndCurrentlyPoppingStack(self, expressionStack):
 		return self.__isPoppingStack and self.areBothStacksSizeOfOne(expressionStack)
-	
+
 	def areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(self, expressionStack):
 		return not self.__isPoppingStack and self.areBothStacksSizeOfOne()
 
 	def areBothStacksSizeOfOne(self, expressionStack):
 		return expressionStack.numberStackSize() == 1 and expressionStack.operatorStackSize() == 1
-
-
-	
-
-
-	
-
-
