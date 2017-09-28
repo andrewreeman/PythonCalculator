@@ -59,7 +59,7 @@ class ExpressionParser:
 		elif orphan:
 			print "We have an orphan"
 			
-			rootNode = logic.popOperatorAndJoinNodes(tree, orphan)
+			rootNode = logic.popOperatorAndJoinNodes(stack, tree, orphan)
 			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.isNumberStackCountGreaterThanOperatorStackCount(stack):
@@ -85,7 +85,7 @@ class ExpressionParser:
 			print "Both stacks are equal size"
 
 			orphan = logic.popRootNode(stack)
-			return self.__createNodeFromStack(depth + 1, rootNode, orphan)
+			return self.__createNodeFromStack(depth + 1, tree, orphan)
 
 class ExpressionStackLogic:
 	def __init__(self):

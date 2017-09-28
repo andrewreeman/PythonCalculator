@@ -35,9 +35,10 @@ def main():
 
 	t2 = createTest("3+2*4", 11)
 	t3 = createTest("10-10/5+3", 11)
+	t4 = createTest("7-4*8+3-4/2", -24)
 	#t3 = createTest("10 - 10 / 5 + 3", 5)
 
-	for t in [t1, t2, t3]:
+	for t in [t1, t2, t3, t4]:
 		tester.addTest(t)
 
 	tester.perform()
