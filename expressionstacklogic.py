@@ -40,6 +40,7 @@ class ExpressionParser:
 							tree = self.__createNodeFromStack(0, tree)							
 						self.__stack.pushOperator(operatorToken)
 
+			#todo: this is ugly code. we should be abstracting this all into a bracket parser!
 			if stream.peek() == '(':
 				stream.next()
 				newStack = expStack.ExpressionStack()
