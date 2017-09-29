@@ -1,5 +1,7 @@
 import expressions
 import pdb
+import StringStream as strStr
+import expressionstack as expStack
 
 class ExpressionParser:
 	def __init__(self, expressionStack, expressionStackLogic, numberParser, operatorParser):
@@ -13,15 +15,17 @@ class ExpressionParser:
 		tree = None		
 
 	 	#pdb.set_trace()
-		while stream.hasChars():			
-			if not self.__numberParser.canConsume(stream) and not self.__operatorParser.canConsume(stream):
+		while stream.hasChars() and not stream.peek() == ')':			
+			if not self.__numberParser.canConsume(stream) and not self.__operatorParser.canConsume(stream) and not stream.peek() == '(':
 				stream.next()
 				continue
 
+
+						
 			numberToken = self.__numberParser.parse(stream)
 
 			if numberToken:				
-				self.__stack.pushNumber(numberToken)
+				self.__stack.pushNumber(numberToken)		
 
 			operatorToken = self.__operatorParser.parse(stream)
 
@@ -35,54 +39,68 @@ class ExpressionParser:
 						while not self.__stack.isOperatorStackEmpty():							
 							tree = self.__createNodeFromStack(0, tree)							
 						self.__stack.pushOperator(operatorToken)
+
+			if stream.peek() == '(':
+				stream.next()
+				newStack = expStack.ExpressionStack()
+				bracketTree = ExpressionParser(newStack, self.__logic, self.__numberParser, self.__operatorParser).parse(stream)
+
+				print "New bracket tree is: %s" % str(bracketTree)
+				numberResult = bracketTree.evaluate()
+				tempStream = strStr.StringStream("%d" % numberResult)
+				numberToken = self.__numberParser.parse(tempStream)
+				print "Number token in bracket evaluation is: %s" % str(numberToken)
+				self.__stack.pushNumber(numberToken)		
+				if stream.peek() == ')':
+					stream.next()
 		
 
 		return self.__createNodeFromStack(0, tree)
 
 	def __createNodeFromStack(self, depth, tree = None, orphan = None):
-		print "\nCreate node from stack called with tree: %s" % tree		
+		#print "\nCreate node from stack called with tree: %s" % tree		
 		
 		logic = self.__logic		
 		stack = self.__stack
-		print stack
+		#print stack
 
 		if depth == 0:
 			logic.setIsPoppingStack(False) #todo: if popping stack state just depends on an existence of a tree then just use that instead
 
-		print "Is currently popping stack: %s" % str(logic.isPoppingStack())
-		print "Depth is: %s" % str(depth)
+		#print "Is currently popping stack: %s" % str(logic.isPoppingStack())
+		#print "Depth is: %s" % str(depth)
 
 		if stack.isOperatorStackEmpty():
-			print "Operator stack is empty"
+		#	print "Operator stack is empty"
 			return tree
 
 		elif orphan:
-			print "We have an orphan"
+		#	print "We have an orphan"
 			
 			rootNode = logic.popOperatorAndJoinNodes(stack, tree, orphan)
 			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.isNumberStackCountGreaterThanOperatorStackCount(stack):
-			print "Number stack larger than operator stack"
+		#	print "Number stack larger than operator stack"
 
 			logic.setIsPoppingStack(True)
 			rootNode = logic.popRootNode(stack)
 			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.areBothStacksSizeOfOneAndCurrentlyPoppingStack(stack):
-			print "Both stacks have one and currently popping stack"
+		#	print "Both stacks have one and currently popping stack"
 
 			rootNode = logic.popJoiningRootNodeToRightOperand(stack, tree)
 			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(stack):
-			print "Both stacks have one and currently not popping stack"
+		#	print "Both stacks have one and currently not popping stack"
 
 			rootNode = logic.popJoiningRootNodeToLeftOperand(stack, tree)
 			return self.__createNodeFromStack(depth + 1, rootNode)
 
 		elif logic.areBothStacksEqualSize(stack):
-			print "Both stacks are equal size"
+		#	print "Both stacks are equal size"
 
 			orphan = logic.popRootNode(stack)
 			return self.__createNodeFromStack(depth + 1, tree, orphan)

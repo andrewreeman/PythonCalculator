@@ -62,6 +62,18 @@ Create Node From Stack
 	pop operator from stack and add to operator of new node
 
 
+	Brackets: naive approach!
+
+	Is we tweak the ExpressionParser so that it's termination condition is the end of stream OR an end bracket ')' then surely we could just recurse into the expression parser again when we encounter an open bracket...
+	Ensuring that these brackets are consumed properly. Fingers crossed this is a solution! Super easy if so...
+
+	Test cases:
+
+	(3+2)*4 = 20
+	(10-10)+3/(5+3) = 0+(3/15) = 5
+	(7-4)*(8+3-4)/7 = 3
+
+
 
 
 
