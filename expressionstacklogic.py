@@ -15,12 +15,11 @@ class ExpressionParser:
 		tree = None		
 
 	 	#pdb.set_trace()
-		while stream.hasChars() and not stream.peek() == ')':			
+		while stream.hasChars() and not stream.peek() == ')':	
+			print "I am looping baby"		
 			if not self.__numberParser.canConsume(stream) and not self.__operatorParser.canConsume(stream) and not stream.peek() == '(':
 				stream.next()
 				continue
-
-
 						
 			numberToken = self.__numberParser.parse(stream)
 
@@ -45,12 +44,10 @@ class ExpressionParser:
 				stream.next()
 				newStack = expStack.ExpressionStack()
 				bracketTree = ExpressionParser(newStack, self.__logic, self.__numberParser, self.__operatorParser).parse(stream)
-
-				print "New bracket tree is: %s" % str(bracketTree)
+				
 				numberResult = bracketTree.evaluate()
 				tempStream = strStr.StringStream("%d" % numberResult)
-				numberToken = self.__numberParser.parse(tempStream)
-				print "Number token in bracket evaluation is: %s" % str(numberToken)
+				numberToken = self.__numberParser.parse(tempStream)				
 				self.__stack.pushNumber(numberToken)		
 				if stream.peek() == ')':
 					stream.next()
@@ -60,7 +57,8 @@ class ExpressionParser:
 
 	def __createNodeFromStack(self, depth, tree = None, orphan = None):
 		#print "\nCreate node from stack called with tree: %s" % tree		
-		
+		print "__createNodeFromStack is called with"
+		print tree
 		logic = self.__logic		
 		stack = self.__stack
 		#print stack

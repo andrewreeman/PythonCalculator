@@ -47,16 +47,14 @@ class NumberParser:
 		if isNegative:
 			stream.next()
 		
-		numberToken = self.__consumeNumber(stream)	
-		print "Number token is: %s" % str(numberToken)	
+		numberToken = self.__consumeNumber(stream)		
 		return expressions.NumberExpression(numberToken, isNegative)
 
 	def canConsume(self, stream):
 		return self.__canConsume(stream)
 		
 	def __canConsume(self, stream):
-		token = stream.peek()	
-		print "Checking can consume: %s" % token
+		token = stream.peek()			
 		return self.__isSingleDigitNum(token) or self.__isNegativeSign(token)
 	
 
