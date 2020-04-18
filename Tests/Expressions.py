@@ -1,5 +1,5 @@
 from ExpressionEvaluator import *
-import utils
+import Tests.utils
 
 
 def createTest(expression, expectedResult):

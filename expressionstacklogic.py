@@ -15,8 +15,7 @@ class ExpressionParser:
 		tree = None		
 
 	 	#pdb.set_trace()
-		while stream.hasChars() and not stream.peek() == ')':	
-			print "I am looping baby"		
+		while stream.hasChars() and not stream.peek() == ')':				
 			if not self.__numberParser.canConsume(stream) and not self.__operatorParser.canConsume(stream) and not stream.peek() == '(':
 				stream.next()
 				continue
@@ -56,9 +55,7 @@ class ExpressionParser:
 		return self.__createNodeFromStack(0, tree)
 
 	def __createNodeFromStack(self, depth, tree = None, orphan = None):
-		#print "\nCreate node from stack called with tree: %s" % tree		
-		print "__createNodeFromStack is called with"
-		print tree
+		#print "\nCreate node from stack called with tree: %s" % tree				
 		logic = self.__logic		
 		stack = self.__stack
 		#print stack

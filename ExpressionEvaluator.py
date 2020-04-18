@@ -6,12 +6,11 @@ def evaluate(expressionString):
 	stream = StringStream(expressionString)
 	return consume(stream)
 
-def consume(stream):
+def consume(stream):	
 	numberParser = NumberParser()
 	operatorParser = OperatorParser()
 	binaryOperandConsumer = BinaryOperandConsumer( numberParser, operatorParser )
-	expressionConsumer = ExpressionConsumer(binaryOperandConsumer)	
-	
+	expressionConsumer = ExpressionConsumer(binaryOperandConsumer)		
 	return expressionConsumer.consume(stream).evaluate() 
 
 
@@ -19,7 +18,7 @@ class ExpressionConsumer:
 	def __init__(self, binaryOperandConsumer): 
 		self.__binaryOperandConsumer = binaryOperandConsumer
 	
-	def consume(self, stream):			
+	def consume(self, stream):		
 		result = self.__binaryOperandConsumer.consume(stream)	
 
 		while stream.hasChars():		
