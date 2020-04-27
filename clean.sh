@@ -1,0 +1,1 @@
+find . -name '*.pyc' '!' -path './venv/*' -delete
