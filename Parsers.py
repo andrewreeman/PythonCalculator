@@ -10,7 +10,8 @@ class OperatorParser:
 	def parse(self, stream):
 		if not self.__canConsume(stream):
 			return False
-		token = stream.next()
+		
+		token: str = stream.next()
 
 		if token == '+':
 			return AddOperator()
@@ -20,6 +21,8 @@ class OperatorParser:
 			return MultiplyOperator()
 		elif token == '/':
 			return DivideOperator()
+		elif token.isspace():
+			return parse(self, stream)
 		
 
 	def canConsume(self, stream):
@@ -41,10 +44,14 @@ class NumberParser:
 		if not self.__canConsume(stream):
 			return False
 
-		token = stream.peek()	
+		token: str = stream.peek()	
+		if token.isspace():
+			stream.next()
+			return parse(self, stream)
+
 		isNegative = self.__isNegativeSign(token)		
 		
-		if isNegative:
+		if isNegative:			
 			stream.next()
 		
 		numberToken = self.__consumeNumber(stream)		

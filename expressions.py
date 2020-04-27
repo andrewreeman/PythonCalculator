@@ -1,3 +1,5 @@
+from operators import SubtractOperator
+
 class BinaryOperandExpression:
 	def __init__(self, operandA, operator, operandB):
 		self.__operandA = operandA
@@ -32,6 +34,12 @@ class NumberExpression:
 	def __init__(self, char, isNegative):
 		self.__char = char
 		self.__isNegative = isNegative
+
+	def convert_to_subtract_operator(self):
+		if self.__char == False and self.__isNegative:
+			return SubtractOperator()
+		else:
+			return None
 
 	def evaluate(self):
 		number = int(self.__char)

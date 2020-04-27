@@ -33,7 +33,7 @@ def main():
 
 	tests = list()
 	def addTest(test, expected):
-		tests.append(createTest(test, expected))
+		tests.append(createTest(test, expected))	
 
 	addTest("1+1", 2)
 	addTest("3+2*4", 11)
@@ -48,13 +48,17 @@ def main():
 	addTest("10+0", 10)		
 	addTest("10", 10)
 	addTest("(10)", 10)		
-	addTest("2-(3*2)+10", 6) # result is -14
-	addTest("2-(3*2)+10", 6) # result is -14
+	addTest("2-(3*2)+10", 6)
 	addTest("3+(2+5)-4", 6)
 	addTest("(10+(3*2))", 16) 	
-	addTest("(10+(3*2))-2", 14) 	
-	#addTest("10 - 10 / 5 + 3", 5)
-	
+	addTest("(10+(3*2))-2", 14) 		
+	addTest("10-10/5+3", 11)	
+	addTest("10 - 10", 0)
+	addTest("10 - 10 / 5 + 3", 11)
+	addTest("-1", -1)
+	addTest("-0", -0)
+	addTest("(-0)", -0)
+
 	for t in tests:
 		tester.addTest(t)
 

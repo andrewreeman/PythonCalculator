@@ -18,16 +18,20 @@ class ExpressionParser:
 
 	 	#pdb.set_trace()
 		while stream.hasChars() and not stream.peek() == ')':				
+
 			if not self.__numberParser.canConsume(stream) and not self.__operatorParser.canConsume(stream) and not stream.peek() == '(':
 				stream.next()
 				continue
 						
-			numberToken = self.__numberParser.parse(stream)
-
+			numberToken = self.__numberParser.parse(stream)			
 			if numberToken:				
-				self.__stack.pushNumber(numberToken)		
+				self.__stack.pushNumber(numberToken)					
 
 			operatorToken = self.__operatorParser.parse(stream)
+			if not operatorToken and numberToken:
+				operatorToken = numberToken.convert_to_subtract_operator()
+				if operatorToken:
+					self.__stack.popNumber()
 
 			if operatorToken:				
 				if self.__stack.isOperatorStackEmpty():
