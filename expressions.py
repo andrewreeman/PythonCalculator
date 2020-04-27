@@ -25,10 +25,16 @@ class BinaryOperandExpression:
 		return other.__operator.precedence < self.__operator.precedence
 
 	def __str__(self):
-		description = "Operand A: " + str(self.leftOperand())
-		description += "\nOperand B: " + str(self.rightOperand())
-		description += "\nOperator: " + str(self.operator())
-		return description
+		return f"({str(self.leftOperand())} {str(self.operator())} {str(self.rightOperand())})"
+		# description = "Operand A: " + str(self.leftOperand())
+		# description += "\nOperand B: " + str(self.rightOperand())
+		# description += "\nOperator: " + str(self.operator())
+
+		# try:
+		# 	description += f"\nResult: ({self.leftOperand().evaluate()} {self.operator()} \n\t{self.rightOperand().evaluate()})"		
+		# except:
+		# 	pass
+		# return description
 
 class NumberExpression:
 	def __init__(self, char, isNegative):
