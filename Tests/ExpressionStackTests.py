@@ -2,7 +2,7 @@ from ExpressionEvaluator import *
 import expressionstack as expstack
 import expressionstacklogic as logic
 import expressions as exp
-import Tests.utils
+import Tests.utils as utils
 
 def testExpressionStackOperations():
 	tester = utils.Tester("Expression stack operation tests")

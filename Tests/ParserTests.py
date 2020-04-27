@@ -1,5 +1,5 @@
 import Parsers
-import Tests.utils
+import Tests.utils as utils
 import StringStream as strStr
 
 

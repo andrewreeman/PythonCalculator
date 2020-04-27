@@ -58,6 +58,28 @@ def main():
 	addTest("-1", -1)
 	addTest("-0", -0)
 	addTest("(-0)", -0)
+		
+
+	addTest("2-(6)+10", 6)		
+	addTest("-4+10", 6)
+	addTest("2-6+0", -4)		
+	addTest("2-6+10", 6)
+	
+	addTest("1*2/2", 1)	
+	addTest("1*8/4", 2)			
+	
+	# tests.clear()
+	addTest("1+2/2", 2)			
+	addTest("1+1*2/2-1", 1)		
+
+	# tests.clear()
+	addTest("1+1*2/2", 2)				
+
+	#tests.clear()
+	addTest("1+2/2", 2)	# '(1 + (2 / 2))' is correct grouping
+
+	# tests.clear()
+	addTest("3+12/3*5", 23)
 
 	for t in tests:
 		tester.addTest(t)

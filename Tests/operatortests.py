@@ -1,4 +1,4 @@
-import Tests.utils
+import Tests.utils as utils
 import operators
 
 def testOperatorPrecedence():
