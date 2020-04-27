@@ -1,6 +1,7 @@
 import expressions
 import pdb
 import StringStream as strStr
+
 import expressionstack as expStack
 from expressionstack import ExpressionStack
 
@@ -40,6 +41,13 @@ class ExpressionParser:
 					self.__stack.pushOperator(operatorToken)
 				else:
 					if self.__logic.isTopOperatorStackLowerPrecedence(self.__stack, operatorToken):
+						self.__stack.pushOperator(operatorToken)
+					elif self.__stack.numberStackSize() >= 2 and self.__stack.operatorStackSize() >= 1 and self.__logic.isTopOperatorStackSamePrecedence(self.__stack, operatorToken):
+						operandB = self.__stack.popNumber()
+						operandA = self.__stack.popNumber()
+						operator = self.__stack.popOperator()
+						new_top_number = expressions.BinaryOperandExpression(operandA, operator, operandB).evaluate()						
+						self.__stack.pushNumber(NumberExpression.fromNumber(new_top_number))						
 						self.__stack.pushOperator(operatorToken)
 					else:
 						while not self.__stack.isOperatorStackEmpty():							
@@ -145,11 +153,18 @@ class ExpressionStackLogic:
 		operator = expressionStack.popOperator()
 		if operator and leftNode and rightNode:
 			return expressions.BinaryOperandExpression(leftNode, operator, rightNode)
-
-	def isTopOperatorStackLowerPrecedence(self, expressionStack, operator):
+	
+	def isTopOperatorStackLowerPrecedence(self, expressionStack: ExpressionStack, operator):		
 		topOperator = expressionStack.peekOperator()
 		if topOperator:
 			return topOperator.isLowerPrecedenceThan(operator)
+		else:
+			return False
+
+	def isTopOperatorStackSamePrecedence(self, expressionStack, operator):
+		topOperator = expressionStack.peekOperator()
+		if topOperator:
+			return topOperator.isSamePrecedenceAs(operator)
 		else:
 			return False
 

@@ -17,7 +17,7 @@ class BinaryOperandExpression:
 
 	def operator(self):
 		return self.__operator
-
+	
 	def evaluate(self):
 		return self.__operator.evaluate()(self.__operandA.evaluate(),self.__operandB.evaluate())
 
@@ -37,9 +37,14 @@ class BinaryOperandExpression:
 		# return description
 
 class NumberExpression:
+	@staticmethod
+	def fromNumber(number): 
+		char = str(abs(number))		
+		return NumberExpression(char, number < 0)
+
 	def __init__(self, char, isNegative):
 		self.__char = char
-		self.__isNegative = isNegative
+		self.__isNegative = isNegative	
 
 	def convert_to_subtract_operator(self):
 		if self.__char == False and self.__isNegative:
@@ -48,7 +53,7 @@ class NumberExpression:
 			return None
 
 	def evaluate(self):
-		number = int(self.__char)
+		number = float(self.__char)
 		if self.__isNegative:
 			return -number
 		else:
