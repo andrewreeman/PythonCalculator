@@ -47,14 +47,14 @@ def main():
 	addTest("(10+0)", 10)
 	addTest("10+0", 10)		
 	addTest("10", 10)
-	addTest("(10)", 10)	
-	addTest("(10+(3*2))-2", 14) 
-	#t7 = createTest("2-(3*2)+10", 6) # result is -14
-	#t7 = createTest("3+(2+5)-4", 6)
-	#t3 = createTest("10 - 10 / 5 + 3", 5)
-
-	# for t in [t1, t2, t3, t4, t5, t6, t7]:
-	# for t in [t1, t2, t3, t4, t5, t6, t7]:
+	addTest("(10)", 10)		
+	addTest("2-(3*2)+10", 6) # result is -14
+	addTest("2-(3*2)+10", 6) # result is -14
+	addTest("3+(2+5)-4", 6)
+	addTest("(10+(3*2))", 16) 	
+	addTest("(10+(3*2))-2", 14) 	
+	#addTest("10 - 10 / 5 + 3", 5)
+	
 	for t in tests:
 		tester.addTest(t)
 

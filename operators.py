@@ -3,7 +3,7 @@ class AddOperator:
 		return lambda a, b: a + b
 
 	def precedence(self):
-		return 1
+		return 0
 
 	def isLowerPrecedenceThan(self, operator):
 		return isOperatorLowerPrecedenceThanOtherOperator(self, operator)
@@ -24,7 +24,7 @@ class MultiplyOperator:
 		return lambda a,b: a * b
 
 	def precedence(self):
-		return 2
+		return 1
 
 	def isLowerPrecedenceThan(self, operator):
 		return isOperatorLowerPrecedenceThanOtherOperator(self, operator)
@@ -34,7 +34,7 @@ class DivideOperator:
 		return lambda a,b: 0 if b == 0 else a/b	
 
 	def precedence(self):
-		return 3
+		return 1
 
 	def isLowerPrecedenceThan(self, operator):
 		return isOperatorLowerPrecedenceThanOtherOperator(self, operator)
