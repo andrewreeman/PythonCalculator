@@ -2,14 +2,16 @@ import expressions
 import pdb
 import StringStream as strStr
 import expressionstack as expStack
+from expressionstack import ExpressionStack
+
 from operators import AddOperator
 from expressions import NumberExpression
 
 class ExpressionParser:
-	def __init__(self, expressionStack, expressionStackLogic, numberParser, operatorParser):
+	def __init__(self, expressionStack: ExpressionStack, expressionStackLogic, numberParser, operatorParser):
 		self.__numberParser = numberParser
 		self.__operatorParser = operatorParser
-		self.__stack = expressionStack
+		self.__stack: ExpressionStack = expressionStack
 		self.__logic = expressionStackLogic
 
 
