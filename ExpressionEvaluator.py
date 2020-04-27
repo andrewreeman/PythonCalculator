@@ -34,7 +34,7 @@ class BinaryOperandConsumer:
 		pass
 	
 	def consume(self, stream):
-		# is next token is an operator then left operand is set to previous expression
+		# if next token is an operator then left operand is set to previous expression
 		operator = self.__operatorConsumer.parse(stream)
 		
 		# if not then it must be a number and we have a complete expression such as 2+2 or 3*476
@@ -67,12 +67,12 @@ class BinaryOperandConsumer:
 			return self.__previousExpression
 
 
-	def __isSingleDigitNum(self, char):
-		return char in string.digits
+	# def __isSingleDigitNum(self, char):
+	# 	return char in string.digits
 	
-	def __isNegativeSign(self, char):
-		result = char == '-'
-		return result
+	# def __isNegativeSign(self, char):
+	# 	result = char == '-'
+	# 	return result
 
 
 

@@ -2,6 +2,8 @@ import expressions
 import pdb
 import StringStream as strStr
 import expressionstack as expStack
+from operators import AddOperator
+from expressions import NumberExpression
 
 class ExpressionParser:
 	def __init__(self, expressionStack, expressionStackLogic, numberParser, operatorParser):
@@ -67,9 +69,12 @@ class ExpressionParser:
 		#print "Depth is: %s" % str(depth)
 
 		if stack.isOperatorStackEmpty():
-		#	print "Operator stack is empty"
-			return tree
-
+			if stack.isNumberStackEmpty():
+				return tree
+			else:
+				rootNode = logic.popSingleNumberAddition(stack, tree)
+				return self.__createNodeFromStack(depth + 1, rootNode)
+		#	print "Operator stack is empty"						
 		elif orphan:
 		#	print "We have an orphan"
 			
@@ -115,6 +120,12 @@ class ExpressionStackLogic:
 		rightOperand = expressionStack.popNumber()
 		leftOperand = expressionStack.popNumber()
 		return self.popOperatorAndJoinNodes(expressionStack, leftOperand, rightOperand)
+	
+	def popSingleNumberAddition(self, expressionStack, oldRootNode):
+		number = expressionStack.popNumber()
+		_oldRootNode = oldRootNode or NumberExpression('0', False)
+		return expressions.BinaryOperandExpression(_oldRootNode, AddOperator(), number)
+		
 
 	def popJoiningRootNodeToRightOperand(self, expressionStack, oldRootNode):
 		leftOperand = expressionStack.popNumber()

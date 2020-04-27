@@ -1,6 +1,6 @@
 class AddOperator:
-	def evaluate(self):
-		return lambda a, b: a + b 
+	def evaluate(self):				
+		return lambda a, b: a + b
 
 	def precedence(self):
 		return 1
