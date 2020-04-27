@@ -4,6 +4,8 @@ import Parsers
 import Tests.utils as utils
 import StringStream as strStr
 
+import expression_parser
+
 def createTest(expression, expectedResult):
 
 	testName = "Evaluating expression %s. Expecting result to be %d " % (expression, expectedResult)
@@ -18,7 +20,7 @@ def createTest(expression, expectedResult):
 		_numberParser = Parsers.NumberParser()
 		_operatorParser = Parsers.OperatorParser()
 
-		_expressionParser = logic.ExpressionParser(_stack, _logic, _numberParser, _operatorParser)
+		_expressionParser = expression_parser.ExpressionParser(_stack, _logic, _numberParser, _operatorParser)
 		
 		result = _expressionParser.parse(stream)
 		if not result.evaluate() == expectedResult:

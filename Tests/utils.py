@@ -26,6 +26,8 @@ class Tester:
 			
 			if success:
 				passCount += 1
+			else:
+				raise AssertionError("Test failed")
 
 		print("%d/%d passed" % (passCount, len(self.__tests)))
 

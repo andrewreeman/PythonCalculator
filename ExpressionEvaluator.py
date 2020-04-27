@@ -4,6 +4,7 @@ import expressions
 
 import expressionstacklogic as logic
 import expressionstack as stack
+import expression_parser
 
 def evaluate(expressionString):
 	stream = StringStream(expressionString)	
@@ -15,4 +16,4 @@ def consume(stream):
 	_numberParser = Parsers.NumberParser()
 	_operatorParser = Parsers.OperatorParser()
 
-	return logic.ExpressionParser(_stack, _logic, _numberParser, _operatorParser).parse(stream).evaluate()
+	return expression_parser.ExpressionParser(_stack, _logic, _numberParser, _operatorParser).parse(stream).evaluate()
