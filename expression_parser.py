@@ -5,7 +5,6 @@ import expressions
 #import StringStream as strStr
 from StringStream import StringStream
 
-import expressionstack as expStack
 from expressionstack import ExpressionStack
 
 from operators import AddOperator
@@ -38,41 +37,27 @@ class ExpressionParser:
             operatorToken = self._parse_operator(stream)
 
             if operatorToken:
-                if self._stack.isOperatorStackEmpty():
+                if self._stack.isOperatorStackEmpty() or self._logic.isTopOperatorStackLowerPrecedence(self._stack, operatorToken):
+                    self._stack.pushOperator(operatorToken)                                    
+                elif self._stack.numberStackSize() >= 2 and self._stack.operatorStackSize() >= 1 and self._logic.isTopOperatorStackSamePrecedence(self._stack, operatorToken):
+                    operandB = self._stack.popNumber()
+                    operandA = self._stack.popNumber()
+                    operator = self._stack.popOperator()
+                    new_top_number = expressions.BinaryOperandExpression(operandA, operator, operandB).evaluate()
+                    self._stack.pushNumber(NumberExpression.fromNumber(new_top_number))
                     self._stack.pushOperator(operatorToken)
-                else:
-                    if self._logic.isTopOperatorStackLowerPrecedence(self._stack, operatorToken):
-                        self._stack.pushOperator(operatorToken)
-                    elif self._stack.numberStackSize() >= 2 and self._stack.operatorStackSize() >= 1 and self._logic.isTopOperatorStackSamePrecedence(self._stack, operatorToken):
-                        operandB = self._stack.popNumber()
-                        operandA = self._stack.popNumber()
-                        operator = self._stack.popOperator()
-                        new_top_number = expressions.BinaryOperandExpression(
-                            operandA, operator, operandB).evaluate()
-                        self._stack.pushNumber(
-                            NumberExpression.fromNumber(new_top_number))
-                        self._stack.pushOperator(operatorToken)
-                    else:
-                        while not self._stack.isOperatorStackEmpty():
-                            tree = self._createNodeFromStack(0, tree)
-                        self._stack.pushOperator(operatorToken)
+                else:                    
+                    while not self._stack.isOperatorStackEmpty():
+                        tree = self._createNodeFromStack(0, tree)
+                    self._stack.pushOperator(operatorToken)
 
             # todo: this is ugly code. we should be abstracting this all into a bracket parser!
             if stream.peek() == '(':
-                stream.next()
-                newStack = expStack.ExpressionStack()
-                bracketTree = ExpressionParser(
-                    newStack, self._logic, self._numberParser, self._operatorParser).parse(stream)
-
-                numberResult = bracketTree.evaluate()
-                tempStream = StringStream("%d" % numberResult)
-                numberToken = self._numberParser.parse(tempStream)
-                self._stack.pushNumber(numberToken)
-                if stream.peek() == ')':
-                    stream.next()
+                stream.next()                
+                self._evaluate_bracket_expression(stream)                                
 
         return self._createNodeFromStack(0, tree)
-
+    
     def _createNodeFromStack(self, depth, tree=None, orphan=None):
         # print "\nCreate node from stack called with tree: %s" % tree
         logic = self._logic
@@ -141,4 +126,12 @@ class ExpressionParser:
         return numberToken
 
     def _parse_operator(self, stream: StringStream):
-        return self._operatorParser.parse(stream)                
+        return self._operatorParser.parse(stream)     
+
+    def _evaluate_bracket_expression(self, stream):        
+        bracket_expression_parser = ExpressionParser(ExpressionStack(), self._logic, self._numberParser, self._operatorParser)        
+        self._stack.pushNumber(bracket_expression_parser.parse(stream))
+        
+        if stream.peek() == ')':
+            stream.next()
+           
