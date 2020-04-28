@@ -141,11 +141,4 @@ class ExpressionParser:
         return numberToken
 
     def _parse_operator(self, stream: StringStream):
-        operator_token = self._operatorParser.parse(stream)
-
-        if not operator_token and not self._stack.isNumberStackEmpty():
-            numberToken: Optional[NumberExpression] = self._stack.popNumber()
-            operator_token = numberToken.convert_to_subtract_operator()
-            if not operator_token:
-                self._stack.pushNumber(numberToken)
-        return operator_token
+        return self._operatorParser.parse(stream)                

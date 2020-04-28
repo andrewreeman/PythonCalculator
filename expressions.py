@@ -44,13 +44,7 @@ class NumberExpression:
 
 	def __init__(self, char, isNegative):
 		self.__char = char
-		self.__isNegative = isNegative	
-
-	def convert_to_subtract_operator(self):
-		if self.__char == False and self.__isNegative:
-			return SubtractOperator()
-		else:
-			return None
+		self.__isNegative = isNegative		
 
 	def evaluate(self):
 		number = float(self.__char)
