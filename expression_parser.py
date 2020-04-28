@@ -32,6 +32,9 @@ class ExpressionParser:
                 continue
 
             numberToken: Optional[NumberExpression] = self._parse_number(stream)
+            if numberToken is not None:
+                continue
+
             operatorToken = self._parse_operator(stream)
 
             if operatorToken:
@@ -121,12 +124,17 @@ class ExpressionParser:
             orphan = logic.popRootNode(stack)
             return self._createNodeFromStack(depth + 1, tree, orphan)
 
-    def _is_not_consumable(self, stream: StringStream) -> bool:
-        return not self._numberParser.canConsume(stream) and not self._operatorParser.canConsume(stream) and not stream.peek() == '('
+    def _is_not_consumable(self, stream: StringStream) -> bool:        
+        # can comment out open bracket test?
+        return stream.peek() is None or stream.peek().isspace() or (not self._numberParser.canConsume(stream) and not self._operatorParser.canConsume(stream) and not stream.peek() == '(')
 
     def _parse_number(self, stream: StringStream) -> Optional[NumberExpression]:
-        numberToken: Optional[NumberExpression] = self._numberParser.parse(
-            stream)
+        # if awaiting operator and it is a negative sign then this is an operator and not a number
+        if self._stack.numberStackSize() >= self._stack.operatorStackSize() and stream.peek() == '-':
+            return None
+
+        numberToken: Optional[NumberExpression] = self._numberParser.parse(stream)
+
         if numberToken:
             self._stack.pushNumber(numberToken)
 

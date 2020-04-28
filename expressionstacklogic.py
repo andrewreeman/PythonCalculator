@@ -41,6 +41,8 @@ class ExpressionStackLogic:
 
 	def popOperatorAndJoinNodes(self, expressionStack, leftNode, rightNode):
 		operator = expressionStack.popOperator()
+		if leftNode == None:
+			leftNode = NumberExpression('0', False)
 		if operator and leftNode and rightNode:
 			return expressions.BinaryOperandExpression(leftNode, operator, rightNode)
 	

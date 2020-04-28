@@ -1,4 +1,5 @@
 import string
+from typing import Optional
 
 from operators import *
 import expressions
@@ -40,9 +41,9 @@ class NumberParser:
 	def __init__(self):
 		pass
 
-	def parse(self, stream):
+	def parse(self, stream) -> Optional[expressions.NumberExpression]:
 		if not self.__canConsume(stream):
-			return False
+			return None
 
 		token: str = stream.peek()	
 		if token.isspace():
