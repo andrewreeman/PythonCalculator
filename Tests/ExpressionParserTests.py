@@ -1,8 +1,11 @@
+from typing import Optional
+
 import expressionstacklogic as logic
 import expressionstack as stack
 import Parsers
 import Tests.utils as utils
 import StringStream as strStr
+
 
 import expression_parser
 
@@ -30,17 +33,25 @@ def createTest(expression, expectedResult):
 	return utils.Test(testName, f)
 
 
-def main():
-	tester = utils.Tester("Expression tests")
-
-	tests = list()
+def main(_tester: Optional[utils.Tester] = None):
+	tester = _tester or utils.Tester("Expression parsing tests")
+	
 	def addTest(test, expected):
-		tests.append(createTest(test, expected))	
+		tester.addTest(createTest(test, expected))		
+	
+	def justTest(test, expected):
+		tester.justTest(createTest(test, expected))
 
 	addTest("1+1", 2)
 	addTest("3+2*4", 11)
 	addTest("10-10/5+3", 11)
+
 	addTest("7-4*8+3-4/2", -24)
+	justTest("7-4*8+3-4", -26)
+
+	addTest("7-4*8-4", -29)
+	addTest("7-4*8+3", -22)
+
 	addTest("3+(2+5)*4", 31)
 	addTest("(7-8)*(2-(4+3)*8)", 54)
 	addTest("1-8", -7)
@@ -61,31 +72,18 @@ def main():
 	addTest("10 - 10 / 5 + 3", 11)
 	addTest("-1", -1)
 	addTest("-0", -0)
-	addTest("(-0)", -0)
-		
-
+	addTest("(-0)", -0)		
 	addTest("2-(6)+10", 6)		
 	addTest("-4+10", 6)
 	addTest("2-6+0", -4)		
 	addTest("2-6+10", 6)
-	
 	addTest("1*2/2", 1)	
 	addTest("1*8/4", 2)			
-	
-	# tests.clear()
 	addTest("1+2/2", 2)			
-	addTest("1+1*2/2-1", 1)		
+	addTest("1+1*2/2-1", 1)			
+	addTest("1+1*2/2", 2)					
+	addTest("1+2/2", 2)	# '(1 + (2 / 2))' is correct grouping	
+	addTest("3+12/3*5", 23)	
 
-	# tests.clear()
-	addTest("1+1*2/2", 2)				
-
-	#tests.clear()
-	addTest("1+2/2", 2)	# '(1 + (2 / 2))' is correct grouping
-
-	# tests.clear()
-	addTest("3+12/3*5", 23)
-
-	for t in tests:
-		tester.addTest(t)
-
-	tester.perform()
+	if _tester is None:
+		tester.perform()
