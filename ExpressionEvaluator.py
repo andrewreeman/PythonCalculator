@@ -6,6 +6,7 @@ import classes.expression.expressions as expressions
 
 from classes.expressionstacklogic import ExpressionStackLogic
 from classes.expressionstack import ExpressionStack
+from sys import argv
 
 
 def evaluate(expressionString):
@@ -19,3 +20,6 @@ def parse(stream):
 	_operatorParser = OperatorParser()
 
 	return ExpressionParser(_stack, _logic, _numberParser, _operatorParser).parse(stream)
+
+if __name__ == "__main__":	
+	print(evaluate(argv[1]))	
