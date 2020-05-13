@@ -3,7 +3,7 @@ from typing import Optional
 import expressionstacklogic as logic
 import expressionstack as stack
 import classes.parser.Parsers as Parsers
-from classes.parser.OperatorParser import OperatorParser
+from classes.parser.operator import OperatorParser
 import Tests.utils as utils
 
 from classes.string_stream import StringStream

@@ -6,7 +6,7 @@ from operators import AddOperator
 from expressionstack import ExpressionStack
 from classes.expression.expressions import NumberExpression
 from classes.parser.Parsers import NumberParser
-import classes.parser.OperatorParser as OperatorParser
+import classes.parser.operator as OperatorParser
 
 class ExpressionStackLogic:
 	def __init__(self):

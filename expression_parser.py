@@ -8,7 +8,7 @@ from expressionstack import ExpressionStack
 from operators import AddOperator
 from classes.expression.expressions import NumberExpression
 from classes.parser.Parsers import NumberParser
-import classes.parser.OperatorParser as OperatorParser
+import classes.parser.operator as OperatorParser
 from expressionstacklogic import ExpressionStackLogic
 
 

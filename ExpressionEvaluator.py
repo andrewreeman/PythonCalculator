@@ -1,6 +1,6 @@
 from classes.string_stream import StringStream
 import classes.parser.Parsers as Parsers
-from classes.parser.OperatorParser import OperatorParser
+from classes.parser.operator import OperatorParser
 import classes.expression.expressions as expressions
 
 import expressionstacklogic as logic
