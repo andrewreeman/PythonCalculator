@@ -12,20 +12,16 @@ from classes.parser.operator import OperatorParser
 from .stack.stack import ParserStack
 from .stack.query import ParserStackQuery
 from .stack.interactor import ParserStackInteractor
+from classes.expression_tree_creator import ExpressionTreeCreator
 
 class ExpressionParser:
     def __init__(self, stack_interactor: ParserStackInteractor, numberParser: NumberParser, operatorParser: OperatorParser):
         self._numberParser: NumberParser = numberParser
         self._operatorParser: OperatorParser = operatorParser
-        self._stack_interactor: ParserStackInteractor = stack_interactor        
+        self._stack_interactor: ParserStackInteractor = stack_interactor  
+        self._tree = ExpressionTreeCreator(stack_interactor)  
 
-    def parse(self, stream):
-        tree = None
-
-        def onStackCanCreateExpression():            
-            nonlocal tree
-            tree = self._createNodeFromStack(0, tree)
-
+    def parse(self, stream):                
         while stream.hasChars() and not stream.peek() == ')':
 
             if not self.canConsume(stream):
@@ -38,49 +34,14 @@ class ExpressionParser:
 
             operatorToken = self._parse_operator(stream)
             
-            self._stack_interactor.pushOperatorToken(operatorToken, onStackCanCreateExpression)
+            self._stack_interactor.pushOperatorToken(operatorToken, self._tree.create_expression)
             
             if stream.peek() == '(':
                 stream.next()                
                 self._evaluate_bracket_expression(stream)                                
 
-        return self._createNodeFromStack(0, tree)
+        return self._tree.create_expression()
     
-    def _createNodeFromStack(self, depth, tree=None, orphan=None):        
-        logic = self._stack_interactor
-        stack = self._stack_interactor.stack
-
-        if depth == 0:
-            # todo: if popping stack state just depends on an existence of a tree then just use that instead
-            logic.query.setIsPoppingStack(False)
-    
-        if stack.isOperatorStackEmpty():
-            if stack.isNumberStackEmpty():
-                return tree
-            else:
-                rootNode = logic.popSingleNumberAddition(stack, tree)
-                return self._createNodeFromStack(depth + 1, rootNode)
-        elif orphan:            
-            rootNode = logic.popOperatorAndJoinNodes(stack, tree, orphan)
-            return self._createNodeFromStack(depth + 1, rootNode)
-
-        elif logic.query.isNumberStackCountGreaterThanOperatorStackCount(stack):            
-            logic.query.setIsPoppingStack(True)
-            rootNode = logic.popRootNode(stack)
-            return self._createNodeFromStack(depth + 1, rootNode)
-
-        elif logic.query.areBothStacksSizeOfOneAndCurrentlyPoppingStack(stack):            
-            rootNode = logic.popJoiningRootNodeToRightOperand(stack, tree)
-            return self._createNodeFromStack(depth + 1, rootNode)
-
-        elif logic.query.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(stack):            
-            rootNode = logic.popJoiningRootNodeToLeftOperand(stack, tree)
-            return self._createNodeFromStack(depth + 1, rootNode)
-
-        elif logic.query.areBothStacksEqualSize(stack):            
-            orphan = logic.popRootNode(stack)
-            return self._createNodeFromStack(depth + 1, tree, orphan)
-
     def canConsume(self, stream: StringStream) -> bool:                                
         return  stream.peek() == '(' or self._numberParser.canConsume(stream) or self._operatorParser.canConsume(stream)
 
