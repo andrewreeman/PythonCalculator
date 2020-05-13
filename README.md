@@ -29,9 +29,8 @@ http://www.mathsisfun.com/algebra/operations-order-calculator.html?i=7-4*8%2B3-4
 						
 4. If empty stream then
 	while operator stack is not empty:
-		Create Node From Stack and append this result to existing tree. ... where in the existing tree? wtf
+		Create Node From Stack and append this result to existing tree. ... where in the existing tree?
 		
-
 
 Create Node From Stack
 
@@ -60,12 +59,6 @@ Create Node From Stack
 	make left operand the existing root node
 	make right operand the new tree
 	pop operator from stack and add to operator of new node
-
-
-	Brackets: naive approach!
-
-	Is we tweak the ExpressionParser so that it's termination condition is the end of stream OR an end bracket ')' then surely we could just recurse into the expression parser again when we encounter an open bracket...
-	Ensuring that these brackets are consumed properly. Fingers crossed this is a solution! Super easy if so...
 
 	Test cases:
 
