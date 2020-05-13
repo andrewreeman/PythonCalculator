@@ -36,6 +36,9 @@ class ParserStackQuery:
 	def isNumberStackCountGreaterThanOperatorStackCount(self, expressionStack):
 		return expressionStack.numberStackSize() > expressionStack.operatorStackSize()
 
+	def areBothStacksEmpty(self, stack):		
+		return stack.isOperatorStackEmpty() and stack.isNumberStackEmpty()
+
 	def areBothStacksEqualSize(self, expressionStack):
 		return expressionStack.numberStackSize() == expressionStack.operatorStackSize()
 
