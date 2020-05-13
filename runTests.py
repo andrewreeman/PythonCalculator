@@ -7,9 +7,8 @@ from Tests.utils import MultiTester
 
 tester = MultiTester()
 ExpressionParserTests.main(tester.new_test_package("Expression parsing tests"))
-# ExpressionTests.main()
-# StackTests.main()
-# OperatorTests.main()
-# ParserTests.main()
-
 tester.perform()
+ExpressionTests.main()
+StackTests.main()
+OperatorTests.main()
+ParserTests.main()

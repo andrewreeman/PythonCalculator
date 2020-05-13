@@ -47,7 +47,7 @@ def main(_tester: Optional[utils.Tester] = None):
 	addTest("10-10/5+3", 11)
 
 	addTest("7-4*8+3-4/2", -24)
-	justTest("7-4*8+3-4", -26)
+	addTest("7-4*8+3-4", -26)
 
 	addTest("7-4*8-4", -29)
 	addTest("7-4*8+3", -22)
