@@ -36,12 +36,7 @@ class BinaryOperandExpression:
 		# 	pass
 		# return description
 
-class NumberExpression:
-	@staticmethod
-	def fromNumber(number): 
-		char = str(abs(number))		
-		return NumberExpression(char, number < 0)
-
+class NumberExpression:	
 	def __init__(self, char, isNegative):
 		self.__char = char
 		self.__isNegative = isNegative		

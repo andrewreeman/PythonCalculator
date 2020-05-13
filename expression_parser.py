@@ -38,20 +38,21 @@ class ExpressionParser:
 
             if operatorToken:
                 if self._stack.isOperatorStackEmpty() or self._logic.isTopOperatorStackLowerPrecedence(self._stack, operatorToken):
-                    self._stack.pushOperator(operatorToken)                                    
+                    self._stack.pushOperator(operatorToken)                                                                                   
                 elif self._stack.numberStackSize() >= 2 and self._stack.operatorStackSize() >= 1 and self._logic.isTopOperatorStackSamePrecedence(self._stack, operatorToken):
+
+                    # should this be replaceable with single call to createNodeFromStack?
                     operandB = self._stack.popNumber()
                     operandA = self._stack.popNumber()
                     operator = self._stack.popOperator()
-                    new_top_number = expressions.BinaryOperandExpression(operandA, operator, operandB).evaluate()
-                    self._stack.pushNumber(NumberExpression.fromNumber(new_top_number))
+                    evaluatable_expression = expressions.BinaryOperandExpression(operandA, operator, operandB)
+                    self._stack.pushNumber(evaluatable_expression)
                     self._stack.pushOperator(operatorToken)
                 else:                    
                     while not self._stack.isOperatorStackEmpty():
                         tree = self._createNodeFromStack(0, tree)
                     self._stack.pushOperator(operatorToken)
-
-            # todo: this is ugly code. we should be abstracting this all into a bracket parser!
+            
             if stream.peek() == '(':
                 stream.next()                
                 self._evaluate_bracket_expression(stream)                                
