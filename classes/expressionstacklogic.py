@@ -2,11 +2,11 @@ import classes.expression.expressions as expressions
 import pdb
 
 from classes.string_stream import StringStream as strStr
-from operators import AddOperator
-from classes.expressionstack import ExpressionStack
-from classes.expression.expressions import NumberExpression
-from classes.parser.number import NumberParser
-from classes.parser.operator import OperatorParser
+from .expression.operators import AddOperator
+from .expressionstack import ExpressionStack
+from .expression.expressions import NumberExpression
+from .parser.number import NumberParser
+from .parser.operator import OperatorParser
 
 class ExpressionStackLogic:
 	def __init__(self):

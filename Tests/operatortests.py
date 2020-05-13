@@ -1,13 +1,13 @@
 import Tests.utils as utils
-import operators
+from classes.expression.operators import *
 
 def testOperatorPrecedence():
 	tester = utils.Tester("Operator precedence tests")
 
-	add = operators.AddOperator()
-	subtract = operators.SubtractOperator()
-	multiply = operators.MultiplyOperator()
-	divide = operators.DivideOperator()
+	add = AddOperator()
+	subtract = SubtractOperator()
+	multiply = MultiplyOperator()
+	divide = DivideOperator()
 	
 	def testThatSubtractHasLowestPrecedence():
 		def f():		

@@ -1,4 +1,4 @@
-from operators import *
+from ..expression.operators import *
 
 class OperatorParser:
 	def __init__(self):

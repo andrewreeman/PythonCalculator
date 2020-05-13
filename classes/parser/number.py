@@ -1,7 +1,7 @@
 import string
 from typing import Optional
 
-from operators import *
+from ..expression.operators import *
 import classes.expression.expressions as expressions
 
 class NumberParser:
