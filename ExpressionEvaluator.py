@@ -10,12 +10,12 @@ from classes.expressionstack import ExpressionStack
 
 def evaluate(expressionString):
 	stream = StringStream(expressionString)	
-	return consume(stream)
+	return parse(stream).evaluate()
 
-def consume(stream):		
+def parse(stream):		
 	_logic = ExpressionStackLogic()
 	_stack = ExpressionStack()
 	_numberParser = NumberParser()
 	_operatorParser = OperatorParser()
 
-	return ExpressionParser(_stack, _logic, _numberParser, _operatorParser).parse(stream).evaluate()
+	return ExpressionParser(_stack, _logic, _numberParser, _operatorParser).parse(stream)
