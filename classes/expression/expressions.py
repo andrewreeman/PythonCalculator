@@ -2,48 +2,24 @@ from .operators import SubtractOperator
 
 class BinaryOperandExpression:
 	def __init__(self, operandA, operator, operandB):
-		self.__operandA = operandA
-		self.__operator = operator
-		self.__operandB = operandB
-
-	def setLeftOperand(self, evaluatable):
-		self.__operandA = evaluatable
-
-	def leftOperand(self):
-		return self.__operandA 
-
-	def rightOperand(self):
-		return self.__operandB
-
-	def operator(self):
-		return self.__operator
+		self._operandA = operandA
+		self._operator = operator
+		self._operandB = operandB	
 	
 	def evaluate(self):
-		return self.__operator.evaluate()(self.__operandA.evaluate(),self.__operandB.evaluate())
-
-	def isOtherLowerPrecedence(self, other):
-		return other.__operator.precedence < self.__operator.precedence
+		return self._operator.evaluate()(self._operandA.evaluate(),self._operandB.evaluate())	
 
 	def __str__(self):
-		return f"({str(self.leftOperand())} {str(self.operator())} {str(self.rightOperand())})"
-		# description = "Operand A: " + str(self.leftOperand())
-		# description += "\nOperand B: " + str(self.rightOperand())
-		# description += "\nOperator: " + str(self.operator())
-
-		# try:
-		# 	description += f"\nResult: ({self.leftOperand().evaluate()} {self.operator()} \n\t{self.rightOperand().evaluate()})"		
-		# except:
-		# 	pass
-		# return description
+		return f"({str(self._operandA)} {str(self._operator)} {str(self._operandB)})"		
 
 class NumberExpression:	
 	def __init__(self, char, isNegative):
-		self.__char = char
-		self.__isNegative = isNegative		
+		self._char = char
+		self._isNegative = isNegative		
 
 	def evaluate(self):
-		number = float(self.__char)
-		if self.__isNegative:
+		number = float(self._char)
+		if self._isNegative:
 			return -number
 		else:
 			return number

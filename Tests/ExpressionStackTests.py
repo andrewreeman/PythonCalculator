@@ -42,14 +42,14 @@ def testExpressionStackOperations():
 			if not rootNode:
 				return "No root node created"
 			
-			if rootNode.leftOperand() != 1:
-				return "Root node left operand does not equal 1. Instead it equals: " + str(rootNode.leftOperand())
+			if rootNode._operandA != 1:
+				return "Root node left operand does not equal 1. Instead it equals: " + str(rootNode._operandA)
 
-			if rootNode.rightOperand() != 2:
-				return "Root node right operand does not equal 2. Instead it equals: " + str(rootNode.rightOperand())
+			if rootNode._operandB != 2:
+				return "Root node right operand does not equal 2. Instead it equals: " + str(rootNode._operandB)
 
-			if rootNode.operator() != "+":
-				return "Root node operator does not equal '+'. Instead it equals: " + rootNode.operator()		
+			if rootNode._operator != "+":
+				return "Root node operator does not equal '+'. Instead it equals: " + rootNode._operator		
 			
 		return utils.Test("Test that an expression stack logic instance will create a correct root node", f)
 	
@@ -69,23 +69,23 @@ def testExpressionStackOperations():
 		if not tree:
 			return "No root node created"
 			
-		if tree.leftOperand() != 7:
-			return "Root node left operand does not equal 7. Instead it equals: " + str(tree.leftOperand())
+		if tree._operandA != 7:
+			return "Root node left operand does not equal 7. Instead it equals: " + str(tree._operandA)
 
-		if not tree.rightOperand():
+		if not tree._operandB:
 			return "Root node has no right operand."
 
-		if tree.rightOperand().leftOperand() != 4:
-			return "Root node's right operand node's left operand does not equal 4. Instead it equals: " + str(tree.rightOperand().leftOperand())
+		if tree._operandB._operandA != 4:
+			return "Root node's right operand node's left operand does not equal 4. Instead it equals: " + str(tree._operandB._operandA)
 
-		if tree.rightOperand().rightOperand() != 8:
-			return "Root node's right operand node's right operand does not equal 8. Instead it equals: " + str(tree.rightOperand().rightOperand())
+		if tree._operandB._operandB != 8:
+			return "Root node's right operand node's right operand does not equal 8. Instead it equals: " + str(tree._operandB._operandB)
 
-		if tree.rightOperand().operator() != '*':
-			return "Root node's right operand node's operator does not equal '*'. Instead it equals: " + str(tree.rightOperand().operator())
+		if tree._operandB._operator != '*':
+			return "Root node's right operand node's operator does not equal '*'. Instead it equals: " + str(tree._operandB._operator)
 
-		if tree.operator() != '-':
-			return "Root node's operator does not equal '-'. Instead it equals: " + str(tree.operator())
+		if tree._operator != '-':
+			return "Root node's operator does not equal '-'. Instead it equals: " + str(tree._operator)
 		
 	def testCanJoinANodeAsRightOperand():
 		def f():	
@@ -116,13 +116,13 @@ def testExpressionStackOperations():
 		if not tree:
 			return "No new root created"
 
-		if tree.rightOperand() != 3:
-			return "New root node's right operand does not equal 3. Instead it equals: " + str(tree.rightOperand())
+		if tree._operandB != 3:
+			return "New root node's right operand does not equal 3. Instead it equals: " + str(tree._operandB)
 
-		if tree.operator() != '+':
-			return "New root node's operator does not equal '+'. Instead it equals: " + str(tree.operator())
+		if tree._operator != '+':
+			return "New root node's operator does not equal '+'. Instead it equals: " + str(tree._operator)
 
-		leftOperand = tree.leftOperand()
+		leftOperand = tree._operandA
 
 		return test7Minus4Times8Tree(leftOperand)
 
@@ -160,19 +160,19 @@ def testExpressionStackOperations():
 				if not newTree:
 					return "No new tree returned"
 
-				if newTree.operator() != '-':
-					return "New tree operator does not equal '-'. Instead it equals: " + str(newTree.operator())
+				if newTree._operator != '-':
+					return "New tree operator does not equal '-'. Instead it equals: " + str(newTree._operator)
 
-				if newTree.rightOperand().operator() != '/':
-					return "New tree right operand operator does not equal '/'. Instead it equals: " + str(newTree.rightOperand().operator())
+				if newTree._operandB._operator != '/':
+					return "New tree right operand operator does not equal '/'. Instead it equals: " + str(newTree._operandB._operator)
 
-				if newTree.rightOperand().leftOperand() != 4:
-					return "New tree right operand left operand does not equal 4. Instead it equals: " +str(newTree.rightOperand().leftOperand())
+				if newTree._operandB._operandA != 4:
+					return "New tree right operand left operand does not equal 4. Instead it equals: " +str(newTree._operandB._operandA)
 
-				if newTree.rightOperand().rightOperand() != 2:
-					return "New tree right operand right operand does not equal 2. Instead it equals: " +str(newTree.rightOperand().rightOperand())  
+				if newTree._operandB._operandB != 2:
+					return "New tree right operand right operand does not equal 2. Instead it equals: " +str(newTree._operandB._operandB)  
 
-				leftNode = newTree.leftOperand()
+				leftNode = newTree._operandA
 				
 				return test3PlusTree(leftNode)
 
