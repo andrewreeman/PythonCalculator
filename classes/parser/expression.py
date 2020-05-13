@@ -23,9 +23,8 @@ class ExpressionParser:
         tree = None
 
         def onStackCanCreateExpression():            
-            while not self._stack_interactor.stack.isOperatorStackEmpty():
-                nonlocal tree
-                tree = self._createNodeFromStack(0, tree)
+            nonlocal tree
+            tree = self._createNodeFromStack(0, tree)
 
         while stream.hasChars() and not stream.peek() == ')':
 
