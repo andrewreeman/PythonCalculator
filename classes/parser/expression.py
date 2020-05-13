@@ -9,15 +9,15 @@ from classes.expression.expressions import NumberExpression
 from classes.parser.number import NumberParser
 from classes.parser.operator import OperatorParser
 
-from classes.expressionstack import ExpressionStack
-from classes.expressionstacklogic import ExpressionStackLogic
+from .stack.stack import ParserStack
+from .stack.query import ParserStackQuery
+from .stack.interactor import ParserStackInteractor
 
 class ExpressionParser:
-    def __init__(self, expressionStack: ExpressionStack, expressionStackLogic: ExpressionStackLogic, numberParser: NumberParser, operatorParser: OperatorParser):
+    def __init__(self, stack_interactor: ParserStackInteractor, numberParser: NumberParser, operatorParser: OperatorParser):
         self._numberParser: NumberParser = numberParser
         self._operatorParser: OperatorParser = operatorParser
-        self._stack: ExpressionStack = expressionStack
-        self._logic: ExpressionStackLogic = expressionStackLogic
+        self._stack_interactor: ParserStackInteractor = stack_interactor        
 
     def parse(self, stream):
         tree = None
@@ -34,22 +34,22 @@ class ExpressionParser:
 
             operatorToken = self._parse_operator(stream)
 
-            if operatorToken:
-                if self._stack.isOperatorStackEmpty() or self._logic.isTopOperatorStackLowerPrecedence(self._stack, operatorToken):
-                    self._stack.pushOperator(operatorToken)                                                                                   
-                elif self._stack.numberStackSize() >= 2 and self._stack.operatorStackSize() >= 1 and self._logic.isTopOperatorStackSamePrecedence(self._stack, operatorToken):
+            if operatorToken:                
+                if self._stack_interactor.stack.isOperatorStackEmpty() or self._stack_interactor.query.isTopOperatorStackLowerPrecedence(self._stack_interactor.stack, operatorToken):
+                    self._stack_interactor.stack.pushOperator(operatorToken)                                                                                   
+                elif self._stack_interactor.stack.numberStackSize() >= 2 and self._stack_interactor.stack.operatorStackSize() >= 1 and self._stack_interactor.query.isTopOperatorStackSamePrecedence(self._stack_interactor.stack, operatorToken):
 
                     # should this be replaceable with single call to createNodeFromStack?
-                    operandB = self._stack.popNumber()
-                    operandA = self._stack.popNumber()
-                    operator = self._stack.popOperator()
+                    operandB = self._stack_interactor.stack.popNumber()
+                    operandA = self._stack_interactor.stack.popNumber()
+                    operator = self._stack_interactor.stack.popOperator()
                     evaluatable_expression = expressions.BinaryOperandExpression(operandA, operator, operandB)
-                    self._stack.pushNumber(evaluatable_expression)
-                    self._stack.pushOperator(operatorToken)
+                    self._stack_interactor.stack.pushNumber(evaluatable_expression)
+                    self._stack_interactor.stack.pushOperator(operatorToken)
                 else:                    
-                    while not self._stack.isOperatorStackEmpty():
+                    while not self._stack_interactor.stack.isOperatorStackEmpty():
                         tree = self._createNodeFromStack(0, tree)
-                    self._stack.pushOperator(operatorToken)
+                    self._stack_interactor.stack.pushOperator(operatorToken)
             
             if stream.peek() == '(':
                 stream.next()                
@@ -58,14 +58,14 @@ class ExpressionParser:
         return self._createNodeFromStack(0, tree)
     
     def _createNodeFromStack(self, depth, tree=None, orphan=None):
-        # print "\nCreate node from stack called with tree: %s" % tree
-        logic = self._logic
-        stack = self._stack
+        # print "\nCreate node from stack called with tree: %s" % tree        
+        logic = self._stack_interactor
+        stack = self._stack_interactor.stack
         # print stack
 
         if depth == 0:
             # todo: if popping stack state just depends on an existence of a tree then just use that instead
-            logic.setIsPoppingStack(False)
+            logic.query.setIsPoppingStack(False)
 
         # print "Is currently popping stack: %s" % str(logic.isPoppingStack())
         # print "Depth is: %s" % str(depth)
@@ -83,26 +83,26 @@ class ExpressionParser:
             rootNode = logic.popOperatorAndJoinNodes(stack, tree, orphan)
             return self._createNodeFromStack(depth + 1, rootNode)
 
-        elif logic.isNumberStackCountGreaterThanOperatorStackCount(stack):
+        elif logic.query.isNumberStackCountGreaterThanOperatorStackCount(stack):
             #	print "Number stack larger than operator stack"
 
-            logic.setIsPoppingStack(True)
+            logic.query.setIsPoppingStack(True)
             rootNode = logic.popRootNode(stack)
             return self._createNodeFromStack(depth + 1, rootNode)
 
-        elif logic.areBothStacksSizeOfOneAndCurrentlyPoppingStack(stack):
+        elif logic.query.areBothStacksSizeOfOneAndCurrentlyPoppingStack(stack):
             #	print "Both stacks have one and currently popping stack"
 
             rootNode = logic.popJoiningRootNodeToRightOperand(stack, tree)
             return self._createNodeFromStack(depth + 1, rootNode)
 
-        elif logic.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(stack):
+        elif logic.query.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(stack):
             #	print "Both stacks have one and currently not popping stack"
 
             rootNode = logic.popJoiningRootNodeToLeftOperand(stack, tree)
             return self._createNodeFromStack(depth + 1, rootNode)
 
-        elif logic.areBothStacksEqualSize(stack):
+        elif logic.query.areBothStacksEqualSize(stack):
             #	print "Both stacks are equal size"
 
             orphan = logic.popRootNode(stack)
@@ -114,23 +114,25 @@ class ExpressionParser:
 
     def _parse_number(self, stream: StringStream) -> Optional[NumberExpression]:
         # if awaiting operator and it is a negative sign then this is an operator and not a number
-        if self._stack.numberStackSize() >= self._stack.operatorStackSize() and stream.peek() == '-':
+        if self._stack_interactor.stack.numberStackSize() >= self._stack_interactor.stack.operatorStackSize() and stream.peek() == '-':
             return None
 
         numberToken: Optional[NumberExpression] = self._numberParser.parse(stream)
 
         if numberToken:
-            self._stack.pushNumber(numberToken)
+            self._stack_interactor.stack.pushNumber(numberToken)
 
         return numberToken
 
     def _parse_operator(self, stream: StringStream):
         return self._operatorParser.parse(stream)     
 
-    def _evaluate_bracket_expression(self, stream):        
-        bracket_expression_parser = ExpressionParser(ExpressionStack(), self._logic, self._numberParser, self._operatorParser)        
-        self._stack.pushNumber(bracket_expression_parser.parse(stream))
+    def _evaluate_bracket_expression(self, stream):               
+        new_interactor = ParserStackInteractor(ParserStack(), ParserStackQuery())
+        bracket_expression_parser = ExpressionParser(new_interactor, self._numberParser, self._operatorParser)
+        self._stack_interactor.stack.pushNumber(bracket_expression_parser.parse(stream))
         
         if stream.peek() == ')':
-            stream.next()
-           
+            stream.next()    
+
+

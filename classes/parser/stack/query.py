@@ -17,36 +17,10 @@ class ParserStackQuery:
 		self.__isPoppingStack = isPoppingStack
 
 	def isPoppingStack(self):
-		return self.__isPoppingStack
+		return self.__isPoppingStack	
 
-	def popRootNode(self, expressionStack):
-		rightOperand = expressionStack.popNumber()
-		leftOperand = expressionStack.popNumber()
-		return self.popOperatorAndJoinNodes(expressionStack, leftOperand, rightOperand)
-	
-	def popSingleNumberAddition(self, expressionStack, oldRootNode):
-		number = expressionStack.popNumber()
-		_oldRootNode = oldRootNode or NumberExpression('0', False)
-		return expressions.BinaryOperandExpression(_oldRootNode, AddOperator(), number)
-		
-
-	def popJoiningRootNodeToRightOperand(self, expressionStack, oldRootNode):
-		leftOperand = expressionStack.popNumber()
-		return self.popOperatorAndJoinNodes(expressionStack, leftOperand, oldRootNode)
-
-	def popJoiningRootNodeToLeftOperand(self, expressionStack, oldRootNode):
-		rightOperandNode = expressionStack.popNumber()
-		return self.popOperatorAndJoinNodes(expressionStack, oldRootNode, rightOperandNode)
-
-	def popOperatorAndJoinNodes(self, expressionStack, leftNode, rightNode):
-		operator = expressionStack.popOperator()
-		if leftNode == None:
-			leftNode = NumberExpression('0', False)
-		if operator and leftNode and rightNode:
-			return expressions.BinaryOperandExpression(leftNode, operator, rightNode)
-	
-	def isTopOperatorStackLowerPrecedence(self, expressionStack: ParserStack, operator):		
-		topOperator = expressionStack.peekOperator()
+	def isTopOperatorStackLowerPrecedence(self, stack, operator):
+		topOperator = stack.peekOperator()
 		if topOperator:
 			return topOperator.isLowerPrecedenceThan(operator)
 		else:

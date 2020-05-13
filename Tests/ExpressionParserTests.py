@@ -3,9 +3,10 @@ from typing import Optional
 from classes.parser.number import NumberParser
 from classes.parser.operator import OperatorParser
 from classes.parser.expression import ExpressionParser
+from classes.parser.stack.stack import ParserStack
+from classes.parser.stack.query import ParserStackQuery
+from classes.parser.stack.interactor import ParserStackInteractor
 
-from classes.expressionstacklogic import ExpressionStackLogic
-from classes.expressionstack import ExpressionStack
 import Tests.utils as utils
 
 from classes.string_stream import StringStream
@@ -18,13 +19,13 @@ def createTest(expression, expectedResult):
 		
 		stream = StringStream(expression)
 
-
-		_logic = ExpressionStackLogic()
-		_stack = ExpressionStack()
+		_query = ParserStackQuery()		
+		_stack = ParserStack()
+		_logic = ParserStackInteractor(_stack, _query)
 		_numberParser = NumberParser()
 		_operatorParser = OperatorParser()
 
-		_expressionParser = ExpressionParser(_stack, _logic, _numberParser, _operatorParser)
+		_expressionParser = ExpressionParser(_logic, _numberParser, _operatorParser)
 		
 		result = _expressionParser.parse(stream)
 		if not result.evaluate() == expectedResult:

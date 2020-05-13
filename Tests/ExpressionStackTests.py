@@ -1,6 +1,6 @@
 from ExpressionEvaluator import *
-from classes.expressionstack import ExpressionStack
-from classes.expressionstacklogic import ExpressionStackLogic
+from classes.parser.stack.stack import ParserStack
+from classes.parser.stack.query import ParserStackQuery
 import classes.expression.expressions as exp
 import Tests.utils as utils
 
@@ -20,7 +20,7 @@ def testExpressionStackOperations():
 	
 	def testCorrectOperatorSizeReported():
 		def f():
-			stack = ExpressionStack()
+			stack = ParserStack()
 			stack.pushOperator(operatorDummy)	
 			stack.pushOperator(operatorDummy2)
 			stack.pushOperator(operatorDummy3)
@@ -33,14 +33,14 @@ def testExpressionStackOperations():
 	tester.addTest(testCorrectOperatorSizeReported())	
 
 
-	def testCanExpressionStackLogicPopCorrectRootNode():
+	def testCanParserStackQueryPopCorrectRootNode():
 		def f():
-			stack = ExpressionStack()
+			stack = ParserStack()
 			stack.pushNumber(1)
 			stack.pushNumber(2)
 			stack.pushOperator("+")
 			
-			_logic = ExpressionStackLogic()
+			_logic = ParserStackInteractor(stack, ParserStackQuery()) 
 
 			rootNode = _logic.popRootNode(stack)
 
@@ -60,15 +60,15 @@ def testExpressionStackOperations():
 			
 		return utils.Test("Test that an expression stack logic instance will create a correct root node", f)
 	
-	tester.addTest( testCanExpressionStackLogicPopCorrectRootNode() )
+	tester.addTest( testCanParserStackQueryPopCorrectRootNode() )
 		
 
-	def make7Minus4Times8Tree(stack):
-		_logic = ExpressionStackLogic()
+	def make7Minus4Times8Tree(stack):		
 		rootNode = exp.BinaryOperandExpression(4, '*', 8)			
 		
 		stack.pushNumber(7)
 		stack.pushOperator('-')
+		_logic = ParserStackInteractor(stack, ParserStackQuery())
 
 		return _logic.popJoiningRootNodeToRightOperand(stack, rootNode)
 			
@@ -97,7 +97,7 @@ def testExpressionStackOperations():
 		
 	def testCanJoinANodeAsRightOperand():
 		def f():	
-			stack = ExpressionStack()		
+			stack = ParserStack()		
 			newRootNode = make7Minus4Times8Tree(stack)
 			return test7Minus4Times8Tree(newRootNode)
 
@@ -106,7 +106,7 @@ def testExpressionStackOperations():
 
 
 	def make7Minus4Times8Plus3Tree(stack):
-		stack = ExpressionStack()		
+		stack = ParserStack()		
 		originalRootNode = make7Minus4Times8Tree(stack)
 		fail = test7Minus4Times8Tree(originalRootNode)
 			
@@ -116,7 +116,7 @@ def testExpressionStackOperations():
 		stack.pushNumber(3)
 		stack.pushOperator('+')
 
-		_logic = ExpressionStackLogic()
+		_logic = ParserStackInteractor(stack, ParserStackQuery())
 		return _logic.popJoiningRootNodeToLeftOperand(stack, originalRootNode)
 	
 	def test3PlusTree(tree):
@@ -136,7 +136,7 @@ def testExpressionStackOperations():
 	def testCanJoinANodeAsLeftOperand():
 		def f():			
 			try:
-				stack = ExpressionStack()								
+				stack = ParserStack()								
 				newRootNode = make7Minus4Times8Plus3Tree(stack)
 				return test3PlusTree(newRootNode)				
 			except ValueError as err:
@@ -148,7 +148,7 @@ def testExpressionStackOperations():
 	def testCanJoinTwoNodesWithOperator():			
 		def f():			
 			try:
-				stack = ExpressionStack()								
+				stack = ParserStack()								
 				newRootNode = make7Minus4Times8Plus3Tree(stack)
 				fail = test3PlusTree(newRootNode)				
 				
@@ -159,7 +159,7 @@ def testExpressionStackOperations():
 				stack.pushNumber(2)
 				stack.pushOperator('/')
 
-				_logic = ExpressionStackLogic()
+				_logic = ParserStackInteractor(stack, ParserStackQuery())
 				
 				rightNode = _logic.popRootNode(stack)
 
