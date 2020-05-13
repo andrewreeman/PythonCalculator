@@ -1,21 +1,27 @@
-class BinaryOperandExpression:
-	def __init__(self, operandA, operator, operandB):
-		self._operandA = operandA
-		self._operator = operator
-		self._operandB = operandB	
+from classes.expression.operators import Operator
+
+class Expression:
+	def evaluate(self) -> float:
+		raise NotImplementedError()	
+
+class BinaryOperandExpression(Expression):
+	def __init__(self, operandA: Expression, operator: Operator, operandB: Expression):
+		self._operandA: Expression = operandA
+		self._operator: Operator = operator
+		self._operandB: Expression = operandB	
 	
-	def evaluate(self):
+	def evaluate(self) -> float:
 		return self._operator.evaluate()(self._operandA.evaluate(),self._operandB.evaluate())	
 
 	def __str__(self):
 		return f"({str(self._operandA)} {str(self._operator)} {str(self._operandB)})"		
 
-class NumberExpression:	
-	def __init__(self, char, isNegative):
-		self._char = char
-		self._isNegative = isNegative		
+class NumberExpression(Expression):	
+	def __init__(self, char: str, isNegative: bool):
+		self._char: str = char
+		self._isNegative: bool = isNegative		
 
-	def evaluate(self):
+	def evaluate(self) -> float:
 		number = float(self._char)
 		if self._isNegative:
 			return -number
