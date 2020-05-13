@@ -16,55 +16,54 @@ class ParserStackInteractor:
         self._stack: ParserStack = stack        
         self._query: ParserStackQuery = ParserStackQuery(self._stack)
 
-    def popRootNode(self, expressionStack):
-        rightOperand = expressionStack.popNumber()
-        leftOperand = expressionStack.popNumber()
-        return self.popOperatorAndJoinNodes(expressionStack, leftOperand, rightOperand)
+    def popRootNode(self):
+        rightOperand = self._stack.popNumber()
+        leftOperand = self._stack.popNumber()
+        return self.popOperatorAndJoinNodes(leftOperand, rightOperand)
 
-    def popSingleNumberAddition(self, expressionStack, oldRootNode):
-        number = expressionStack.popNumber()
+    def popSingleNumberAddition(self, oldRootNode):
+        number = self._stack.popNumber()
         _oldRootNode = oldRootNode or NumberExpression('0', False)
         return expressions.BinaryOperandExpression(_oldRootNode, AddOperator(), number)        
 
-    def popJoiningRootNodeToRightOperand(self, expressionStack, oldRootNode):
-        leftOperand = expressionStack.popNumber()
-        return self.popOperatorAndJoinNodes(expressionStack, leftOperand, oldRootNode)
+    def popJoiningRootNodeToRightOperand(self, oldRootNode):
+        leftOperand = self._stack.popNumber()
+        return self.popOperatorAndJoinNodes(leftOperand, oldRootNode)
 
-    def popJoiningRootNodeToLeftOperand(self, expressionStack, oldRootNode):
-        rightOperandNode = expressionStack.popNumber()
-        return self.popOperatorAndJoinNodes(expressionStack, oldRootNode, rightOperandNode)
+    def popJoiningRootNodeToLeftOperand(self, oldRootNode):
+        rightOperandNode = self._stack.popNumber()
+        return self.popOperatorAndJoinNodes(oldRootNode, rightOperandNode)
 
-    def popOperatorAndJoinNodes(self, expressionStack, leftNode, rightNode):
-        operator = expressionStack.popOperator()
+    def popOperatorAndJoinNodes(self, leftNode, rightNode):
+        operator = self._stack.popOperator()
         if leftNode == None:
             leftNode = NumberExpression('0', False)
         if operator and leftNode and rightNode:
             return expressions.BinaryOperandExpression(leftNode, operator, rightNode)
 
+    def pushNumberToken(self, numberToken):        
+        self._stack.pushNumber(numberToken)
+
     def pushOperatorToken(self, operatorToken, expression_creator):
         if not operatorToken:
             return
         
-        if self.stack.isOperatorStackEmpty() or self.query.isTopOperatorStackLowerPrecedence(operatorToken):
-            self.stack.pushOperator(operatorToken)                                                                                               
-        elif self.stack.numberStackSize() >= 2 and self.stack.operatorStackSize() >= 1 and self.query.isTopOperatorStackSamePrecedence(operatorToken):
+        if self._stack.isOperatorStackEmpty() or self.query.isTopOperatorStackLowerPrecedence(operatorToken):
+            self._stack.pushOperator(operatorToken)                                                                                               
+        elif self._stack.numberStackSize() >= 2 and self._stack.operatorStackSize() >= 1 and self.query.isTopOperatorStackSamePrecedence(operatorToken):
 
             # should this be replaceable with single call to createNodeFromStack?
-            operandB = self.stack.popNumber()
-            operandA = self.stack.popNumber()
-            operator = self.stack.popOperator()
+            operandB = self._stack.popNumber()
+            operandA = self._stack.popNumber()
+            operator = self._stack.popOperator()
             evaluatable_expression = expressions.BinaryOperandExpression(operandA, operator, operandB)
-            self.stack.pushNumber(evaluatable_expression)
-            self.stack.pushOperator(operatorToken)            
+            self._stack.pushNumber(evaluatable_expression)
+            self._stack.pushOperator(operatorToken)            
         else:          
             expression_creator()
-            self.stack.pushOperator(operatorToken)                         
-                
+            self._stack.pushOperator(operatorToken)                                         
 
     @property
     def query(self) -> ParserStackQuery:
         return self._query
-
-    @property
-    def stack(self) -> ParserStack:
-        return self._stack
+    

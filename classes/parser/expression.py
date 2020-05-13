@@ -47,13 +47,13 @@ class ExpressionParser:
 
     def _parse_number(self, stream: StringStream) -> Optional[NumberExpression]:
         # if awaiting operator and it is a negative sign then this is an operator and not a number
-        if self._stack_interactor.stack.numberStackSize() >= self._stack_interactor.stack.operatorStackSize() and stream.peek() == '-':
+        if self._stack_interactor.query.isAwaitingOperator() and stream.peek() == '-':
             return None
 
         numberToken: Optional[NumberExpression] = self._numberParser.parse(stream)
 
         if numberToken:
-            self._stack_interactor.stack.pushNumber(numberToken)
+            self._stack_interactor.pushNumberToken(numberToken)            
 
         return numberToken
 
@@ -63,7 +63,7 @@ class ExpressionParser:
     def _evaluate_bracket_expression(self, stream):
         new_interactor = ParserStackInteractor(ParserStack())
         bracket_expression_parser = ExpressionParser(new_interactor, self._numberParser, self._operatorParser)
-        self._stack_interactor.stack.pushNumber(bracket_expression_parser.parse(stream))
+        self._stack_interactor.pushNumberToken(bracket_expression_parser.parse(stream))
         
         if stream.peek() == ')':
             stream.next()    

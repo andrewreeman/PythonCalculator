@@ -6,7 +6,6 @@ import Tests.utils as utils
 def testExpressionStackOperations():
 	tester = utils.Tester("Expression stack operation tests")
 	
-
 	operatorDummy = 0
 	operatorDummy2 = 1
 	operatorDummy3 = 2
@@ -27,10 +26,8 @@ def testExpressionStackOperations():
 			if not stack.operatorStackSize() == 3:
 				return "Operator stack size does not equal 3. Instead it equals: %d" % stack.operatorStackSize()
 		return utils.Test("Test that correct operator size is reported", f)	
-
 		
 	tester.addTest(testCorrectOperatorSizeReported())	
-
 
 	def testCanParserStackQueryPopCorrectRootNode():
 		def f():
@@ -40,8 +37,7 @@ def testExpressionStackOperations():
 			stack.pushOperator("+")
 			
 			_logic = ParserStackInteractor(stack)
-
-			rootNode = _logic.popRootNode(stack)
+			rootNode = _logic.popRootNode()
 
 			if not rootNode:
 				return "No root node created"
@@ -53,14 +49,11 @@ def testExpressionStackOperations():
 				return "Root node right operand does not equal 2. Instead it equals: " + str(rootNode.rightOperand())
 
 			if rootNode.operator() != "+":
-				return "Root node operator does not equal '+'. Instead it equals: " + rootNode.operator()
-		
-
+				return "Root node operator does not equal '+'. Instead it equals: " + rootNode.operator()		
 			
 		return utils.Test("Test that an expression stack logic instance will create a correct root node", f)
 	
-	tester.addTest( testCanParserStackQueryPopCorrectRootNode() )
-		
+	tester.addTest( testCanParserStackQueryPopCorrectRootNode() )		
 
 	def make7Minus4Times8Tree(stack):		
 		rootNode = exp.BinaryOperandExpression(4, '*', 8)			
@@ -69,9 +62,8 @@ def testExpressionStackOperations():
 		stack.pushOperator('-')
 		_logic = ParserStackInteractor(stack)
 
-		return _logic.popJoiningRootNodeToRightOperand(stack, rootNode)
-			
-	
+		return _logic.popJoiningRootNodeToRightOperand(rootNode)
+				
 	def test7Minus4Times8Tree(tree):
 		if not tree:
 			return "No root node created"
@@ -116,17 +108,17 @@ def testExpressionStackOperations():
 		stack.pushOperator('+')
 
 		_logic = ParserStackInteractor(stack)
-		return _logic.popJoiningRootNodeToLeftOperand(stack, originalRootNode)
+		return _logic.popJoiningRootNodeToLeftOperand(originalRootNode)
 	
 	def test3PlusTree(tree):
 		if not tree:
 			return "No new root created"
 
 		if tree.rightOperand() != 3:
-			return "New root node's right operand does not equal 3. Instead it equals: " + str(newRootNode.rightOperand())
+			return "New root node's right operand does not equal 3. Instead it equals: " + str(tree.rightOperand())
 
 		if tree.operator() != '+':
-			return "New root node's operator does not equal '+'. Instead it equals: " + str(newRootNode.operator())
+			return "New root node's operator does not equal '+'. Instead it equals: " + str(tree.operator())
 
 		leftOperand = tree.leftOperand()
 
@@ -158,16 +150,13 @@ def testExpressionStackOperations():
 				stack.pushNumber(2)
 				stack.pushOperator('/')
 
-				_logic = ParserStackInteractor(stack)
-				
-				rightNode = _logic.popRootNode(stack)
-
+				_logic = ParserStackInteractor(stack)				
+				rightNode = _logic.popRootNode()
 				stack.pushOperator('-')
-				newTree = _logic.popOperatorAndJoinNodes(stack, newRootNode, rightNode)
+				newTree = _logic.popOperatorAndJoinNodes(newRootNode, rightNode)
 				
 				if not newTree:
 					return "No new tree returned"
-
 
 				if newTree.operator() != '-':
 					return "New tree operator does not equal '-'. Instead it equals: " + str(newTree.operator())

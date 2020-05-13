@@ -18,7 +18,13 @@ class ParserStackQuery:
 		self.__isPoppingStack = isPoppingStack
 
 	def isPoppingStack(self):
-		return self.__isPoppingStack	
+		return self.__isPoppingStack
+
+	def isOperatorStackEmpty(self):
+		return self._stack.isOperatorStackEmpty()
+
+	def isAwaitingOperator(self):
+		return self._stack.numberStackSize() >= self._stack.operatorStackSize() 
 
 	def isTopOperatorStackLowerPrecedence(self, operator):
 		topOperator = self._stack.peekOperator()
