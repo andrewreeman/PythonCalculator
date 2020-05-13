@@ -1,4 +1,5 @@
-import Parsers
+import classes.parser.Parsers as Parsers
+from classes.parser.OperatorParser import OperatorParser
 import Tests.utils as utils
 from classes.string_stream import StringStream
 
@@ -10,9 +11,8 @@ def createTest(expression):
 	def f():      
 		stream = StringStream(expression)
 		_numberParser = Parsers.NumberParser()
-		_operatorParser = Parsers.OperatorParser()
-
-
+		_operatorParser = OperatorParser()
+		
 		number = _numberParser.parse(stream)		
 		operator = _operatorParser.parse(stream)		
 		number = _numberParser.parse(stream)		

@@ -2,7 +2,8 @@ from typing import Optional
 
 import expressionstacklogic as logic
 import expressionstack as stack
-import Parsers
+import classes.parser.Parsers as Parsers
+from classes.parser.OperatorParser import OperatorParser
 import Tests.utils as utils
 
 from classes.string_stream import StringStream
@@ -22,7 +23,7 @@ def createTest(expression, expectedResult):
 		_logic = logic.ExpressionStackLogic()
 		_stack = stack.ExpressionStack()
 		_numberParser = Parsers.NumberParser()
-		_operatorParser = Parsers.OperatorParser()
+		_operatorParser = OperatorParser()
 
 		_expressionParser = expression_parser.ExpressionParser(_stack, _logic, _numberParser, _operatorParser)
 		

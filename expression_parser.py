@@ -1,14 +1,14 @@
 from typing import Optional
 
-import classes.expressions as expressions
+import classes.expression.expressions as expressions
 from classes.string_stream import StringStream
 
 from expressionstack import ExpressionStack
 
 from operators import AddOperator
-from classes.expressions import NumberExpression
-from Parsers import NumberParser
-from Parsers import OperatorParser
+from classes.expression.expressions import NumberExpression
+from classes.parser.Parsers import NumberParser
+import classes.parser.OperatorParser as OperatorParser
 from expressionstacklogic import ExpressionStackLogic
 
 
