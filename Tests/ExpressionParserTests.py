@@ -24,8 +24,7 @@ def createTest(expression, expectedResult):
 		_numberParser = NumberParser()
 		_operatorParser = OperatorParser()
 
-		_expressionParser = ExpressionParser(_logic, _numberParser, _operatorParser)
-		
+		_expressionParser = ExpressionParser(_logic, _numberParser, _operatorParser)		
 		result = _expressionParser.parse(stream)
 		if not result.evaluate() == expectedResult:
 			return "Result is: %s. \n object is: %s" % (str(result.evaluate()), str(result))
@@ -56,9 +55,11 @@ def main(_tester: Optional[utils.Tester] = None):
 	addTest("3+(2+5)*4", 31)
 	addTest("(7-8)*(2-(4+3)*8)", 54)
 	addTest("1-8", -7)
-	addTest("1-1", 0)		
+	addTest("1-1", 0)			
 	addTest("(10+0)-2", 8)
+	
 	addTest("(10+0)", 10)
+	
 	addTest("10+0", 10)		
 	addTest("10", 10)
 	addTest("(10)", 10)		

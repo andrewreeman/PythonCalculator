@@ -62,7 +62,8 @@ def testExpressionStackOperations():
 		stack.pushOperator('-')
 		_logic = ParserStackInteractor(stack)
 
-		return _logic.popJoiningRootNodeToRightOperand(rootNode)
+		leftOperand = _logic.popSingleNumber()
+		return _logic.popOperatorAndJoinNodes(leftOperand, rootNode)
 				
 	def test7Minus4Times8Tree(tree):
 		if not tree:
@@ -108,7 +109,8 @@ def testExpressionStackOperations():
 		stack.pushOperator('+')
 
 		_logic = ParserStackInteractor(stack)
-		return _logic.popJoiningRootNodeToLeftOperand(originalRootNode)
+		rightOperand = _logic.popSingleNumber()
+		return _logic.popOperatorAndJoinNodes(originalRootNode, rightOperand)		
 	
 	def test3PlusTree(tree):
 		if not tree:

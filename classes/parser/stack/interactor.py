@@ -21,18 +21,8 @@ class ParserStackInteractor:
         leftOperand = self._stack.popNumber()
         return self.popOperatorAndJoinNodes(leftOperand, rightOperand)
 
-    def popSingleNumberAddition(self, oldRootNode):
-        number = self._stack.popNumber()
-        _oldRootNode = oldRootNode or NumberExpression('0', False)
-        return expressions.BinaryOperandExpression(_oldRootNode, AddOperator(), number)        
-
-    def popJoiningRootNodeToRightOperand(self, oldRootNode):
-        leftOperand = self._stack.popNumber()
-        return self.popOperatorAndJoinNodes(leftOperand, oldRootNode)
-
-    def popJoiningRootNodeToLeftOperand(self, oldRootNode):
-        rightOperandNode = self._stack.popNumber()
-        return self.popOperatorAndJoinNodes(oldRootNode, rightOperandNode)
+    def popSingleNumber(self):
+        return self._stack.popNumber()    
 
     def popOperatorAndJoinNodes(self, leftNode, rightNode):
         operator = self._stack.popOperator()
@@ -48,7 +38,7 @@ class ParserStackInteractor:
         if not operatorToken:
             return
         
-        if self._stack.isOperatorStackEmpty() or self.query.isTopOperatorStackLowerPrecedence(operatorToken):
+        if self.query.isOperatorStackEmpty() or self.query.isTopOperatorStackLowerPrecedence(operatorToken):
             self._stack.pushOperator(operatorToken)                                                                                               
         elif self._stack.numberStackSize() >= 2 and self._stack.operatorStackSize() >= 1 and self.query.isTopOperatorStackSamePrecedence(operatorToken):
 

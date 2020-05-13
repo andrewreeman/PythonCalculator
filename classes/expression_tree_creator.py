@@ -9,32 +9,35 @@ class ExpressionTreeCreator:
         self._tree = self._createNodeFromStack(0, self._tree)
         return self._tree
     
-    def _createNodeFromStack(self, depth, tree=None, orphan=None):                
+    def _createNodeFromStack(self, depth, tree):                
         logic = self._stack_interactor        
         query = self._stack_interactor.query
 
         if query.areBothStacksEmpty():
+            self._stop_popping_stack()            
             return tree
 
-        rootNode = tree
-        if depth == 0:
-            self._start_popping_stack()                                
+        rootNode = tree        
         
-        if query.isOperatorStackEmpty():
-            rootNode = logic.popSingleNumberAddition(tree)
-        elif orphan:            
-            rootNode = logic.popOperatorAndJoinNodes(tree, orphan)            
+        if query.isOperatorStackEmpty():            
+            rootNode = logic.popSingleNumber()    
         elif logic.query.isNumberStackCountGreaterThanOperatorStackCount():            
-            logic.query.setIsPoppingStack(True)
+            self._start_popping_stack()            
             rootNode = logic.popRootNode()            
-        elif logic.query.areBothStacksSizeOfOneAndCurrentlyPoppingStack():            
-            rootNode = logic.popJoiningRootNodeToRightOperand(tree)            
+        elif logic.query.areBothStacksSizeOfOneAndCurrentlyPoppingStack():                        
+            leftOperand = logic.popSingleNumber()
+            rootNode = logic.popOperatorAndJoinNodes(leftOperand, tree)        
         elif logic.query.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack():            
-            rootNode = logic.popJoiningRootNodeToLeftOperand(tree)                        
-        elif logic.query.areBothStacksEqualSize():            
-            orphan = logic.popRootNode()            
+            rightOperandNode = logic.popSingleNumber()
+            rootNode = logic.popOperatorAndJoinNodes(tree, rightOperandNode)
+        else:
+            rightOperand = logic.popRootNode()
+            rootNode = logic.popOperatorAndJoinNodes(tree, rightOperand)
             
-        return self._createNodeFromStack(depth + 1, rootNode, orphan)
+        return self._createNodeFromStack(depth + 1, rootNode)
     
-    def _start_popping_stack(self):        
+    def _start_popping_stack(self):
+        self._stack_interactor.query.setIsPoppingStack(True)
+
+    def _stop_popping_stack(self):        
         self._stack_interactor.query.setIsPoppingStack(False)
