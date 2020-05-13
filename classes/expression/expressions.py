@@ -1,5 +1,3 @@
-from .operators import SubtractOperator
-
 class BinaryOperandExpression:
 	def __init__(self, operandA, operator, operandB):
 		self._operandA = operandA

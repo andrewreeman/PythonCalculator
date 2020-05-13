@@ -28,14 +28,14 @@ class ParserStackQuery:
 	def isTopOperatorStackLowerPrecedence(self, operator):
 		topOperator = self._stack.peekOperator()
 		if topOperator:
-			return topOperator.isLowerPrecedenceThan(operator)
+			return topOperator.is_lower_precedence_than(operator)
 		else:
 			return False
 
 	def isTopOperatorStackSamePrecedence(self, operator):
 		topOperator = self._stack.peekOperator()
 		if topOperator:
-			return topOperator.isSamePrecedenceAs(operator)
+			return topOperator.is_same_precedence_as(operator)
 		else:
 			return False
 
