@@ -1,3 +1,12 @@
+
+# Build
+`source ./venv/bin/activate`
+`pip install -r deps.txt`
+
+# Run tests
+`./runTests.py`
+
+
 Algorithm
 
 We only really care about building up an expression tree. Once this is built the evaluation simply becomes evaluating every node recursively
