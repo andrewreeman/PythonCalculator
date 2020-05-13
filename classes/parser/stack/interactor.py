@@ -1,9 +1,4 @@
-from typing import Optional
-
 import classes.expression.expressions as expressions
-
-from classes.string_stream import StringStream as strStr
-from classes.expression.operators import AddOperator
 from classes.expression.expressions import NumberExpression
 
 from classes.parser.number import NumberParser
