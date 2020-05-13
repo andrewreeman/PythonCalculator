@@ -1,52 +1,49 @@
 class ParserStack:
-    def __init__(self): 
-        self.__operatorStack = list()
-        self.__numberStack = list()
+    """This is a stack used by the the ExpressionParser via
+    the ParserStackInteractor.
+    This stack maintains the parsing state via
+    a stack for expressions and a stack for operators
+    """
 
-    def pushOperator(self, operator):
-        self.__operatorStack.append( operator )
+    def __init__(self):
+        self._operator_stack = list()
+        self._expression_stack = list()
 
-    def pushNumber(self, number):	
-        self.__numberStack.append( number )
+    def push_operator(self, operator):
+        self._operator_stack.append(operator)
 
-    def popOperator(self):
-        if self.__operatorStack:
-            return self.__operatorStack.pop()
+    def push_expression(self, number):
+        self._expression_stack.append(number)
 
-    def peekOperator(self):
-        if self.__operatorStack:
-            return self.__operatorStack[-1]
+    def pop_operator(self):
+        if self._operator_stack:
+            return self._operator_stack.pop()
+    
+    def pop_expression(self):
+        if self._expression_stack:
+            return self._expression_stack.pop()
+        
+    def peek_operator(self):
+        if self._operator_stack:
+            return self._operator_stack[-1]
         else:
             return None
 
-    def popNumber(self):
-        if self.__numberStack:
-            return self.__numberStack.pop()
+    def expression_stack_size(self):
+        return len(self._expression_stack)
 
-    def isOperatorStackEmpty(self):
-        return self.operatorStackSize() == 0
-
-    def isNumberStackEmpty(self):
-        return self.numberStackSize() == 0
-
-    def numberStackSize(self):
-        return len(self.__numberStack)
-
-    def operatorStackSize(self):
-        return len(self.__operatorStack)
+    def operator_stack_size(self):
+        return len(self._operator_stack)
 
     def __str__(self):
-        description = "Stack contents\n\tNumber stack: \n"
+        description = "Stack contents\n\Expression stack: \n"
 
-        for n in reversed(self.__numberStack):
+        for n in reversed(self._expression_stack):
             description += "\t%s\n" % str(n)
 
         description += "\n\tOperator stack: \n"
 
-        for o in reversed(self.__operatorStack):
+        for o in reversed(self._operator_stack):
             description += "\t%s\n" % str(o)
 
-
-
         return description
-

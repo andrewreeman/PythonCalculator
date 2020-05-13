@@ -19,12 +19,12 @@ def testExpressionStackOperations():
 	def testCorrectOperatorSizeReported():
 		def f():
 			stack = ParserStack()
-			stack.pushOperator(operatorDummy)	
-			stack.pushOperator(operatorDummy2)
-			stack.pushOperator(operatorDummy3)
+			stack.push_operator(operatorDummy)	
+			stack.push_operator(operatorDummy2)
+			stack.push_operator(operatorDummy3)
 
-			if not stack.operatorStackSize() == 3:
-				return "Operator stack size does not equal 3. Instead it equals: %d" % stack.operatorStackSize()
+			if not stack.operator_stack_size() == 3:
+				return "Operator stack size does not equal 3. Instead it equals: %d" % stack.operator_stack_size()
 		return utils.Test("Test that correct operator size is reported", f)	
 		
 	tester.addTest(testCorrectOperatorSizeReported())	
@@ -32,9 +32,9 @@ def testExpressionStackOperations():
 	def testCanParserStackQueryPopCorrectRootNode():
 		def f():
 			stack = ParserStack()
-			stack.pushNumber(1)
-			stack.pushNumber(2)
-			stack.pushOperator("+")
+			stack.push_expression(1)
+			stack.push_expression(2)
+			stack.push_operator("+")
 			
 			_logic = ParserStackInteractor(stack)
 			rootNode = _logic.popRootNode()
@@ -58,8 +58,8 @@ def testExpressionStackOperations():
 	def make7Minus4Times8Tree(stack):		
 		rootNode = exp.BinaryOperandExpression(4, '*', 8)			
 		
-		stack.pushNumber(7)
-		stack.pushOperator('-')
+		stack.push_expression(7)
+		stack.push_operator('-')
 		_logic = ParserStackInteractor(stack)
 
 		leftOperand = _logic.popSingleNumber()
@@ -105,8 +105,8 @@ def testExpressionStackOperations():
 		if fail:	
 			raise ValueError(fail)		
 
-		stack.pushNumber(3)
-		stack.pushOperator('+')
+		stack.push_expression(3)
+		stack.push_operator('+')
 
 		_logic = ParserStackInteractor(stack)
 		rightOperand = _logic.popSingleNumber()
@@ -148,13 +148,13 @@ def testExpressionStackOperations():
 				if fail:
 					raise ValueError(fail)
 				
-				stack.pushNumber(4)
-				stack.pushNumber(2)
-				stack.pushOperator('/')
+				stack.push_expression(4)
+				stack.push_expression(2)
+				stack.push_operator('/')
 
 				_logic = ParserStackInteractor(stack)				
 				rightNode = _logic.popRootNode()
-				stack.pushOperator('-')
+				stack.push_operator('-')
 				newTree = _logic.popOperatorAndJoinNodes(newRootNode, rightNode)
 				
 				if not newTree:

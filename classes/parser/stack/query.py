@@ -1,58 +1,54 @@
-import classes.expression.expressions as expressions
-
-from classes.string_stream import StringStream as strStr
-from classes.expression.operators import AddOperator
-from classes.expression.expressions import NumberExpression
-
-from classes.parser.number import NumberParser
-from classes.parser.operator import OperatorParser
 from classes.parser.stack.stack import ParserStack
 
+
 class ParserStackQuery:
-	def __init__(self, stack: ParserStack):
-		self.__isPoppingStack = False
-		self._stack: ParserStack = stack
+    def __init__(self, stack: ParserStack):
+        self.__isPoppingStack = False
+        self._stack: ParserStack = stack
 
-	def setIsPoppingStack(self, isPoppingStack):
-		self.__isPoppingStack = isPoppingStack
+    def setIsPoppingStack(self, isPoppingStack):
+        self.__isPoppingStack = isPoppingStack
 
-	def isPoppingStack(self):
-		return self.__isPoppingStack
+    def isPoppingStack(self):
+        return self.__isPoppingStack
 
-	def isOperatorStackEmpty(self):
-		return self._stack.isOperatorStackEmpty()
+    def isOperatorStackEmpty(self):
+        return self._stack.operator_stack_size() == 0
+    
+    def is_number_stack_empty(self) -> bool:
+        return self._stack.expression_stack_size() == 0
 
-	def isAwaitingOperator(self):
-		return self._stack.numberStackSize() >= self._stack.operatorStackSize() 
+    def isAwaitingOperator(self):
+        return self._stack.expression_stack_size() >= self._stack.operator_stack_size()
 
-	def isTopOperatorStackLowerPrecedence(self, operator):
-		topOperator = self._stack.peekOperator()
-		if topOperator:
-			return topOperator.is_lower_precedence_than(operator)
-		else:
-			return False
+    def isTopOperatorStackLowerPrecedence(self, operator):
+        topOperator = self._stack.peek_operator()
+        if topOperator:
+            return topOperator.is_lower_precedence_than(operator)
+        else:
+            return False
 
-	def isTopOperatorStackSamePrecedence(self, operator):
-		topOperator = self._stack.peekOperator()
-		if topOperator:
-			return topOperator.is_same_precedence_as(operator)
-		else:
-			return False
+    def isTopOperatorStackSamePrecedence(self, operator):
+        topOperator = self._stack.peek_operator()
+        if topOperator:
+            return topOperator.is_same_precedence_as(operator)
+        else:
+            return False
 
-	def isNumberStackCountGreaterThanOperatorStackCount(self):
-		return self._stack.numberStackSize() > self._stack.operatorStackSize()
+    def isNumberStackCountGreaterThanOperatorStackCount(self):
+        return self._stack.expression_stack_size() > self._stack.operator_stack_size()
 
-	def areBothStacksEmpty(self):		
-		return self._stack.isOperatorStackEmpty() and self._stack.isNumberStackEmpty()
+    def areBothStacksEmpty(self):
+        return self.isOperatorStackEmpty() and self.is_number_stack_empty()
 
-	def areBothStacksEqualSize(self):
-		return self._stack.numberStackSize() == self._stack.operatorStackSize()
+    def areBothStacksEqualSize(self):
+        return self._stack.expression_stack_size() == self._stack.operator_stack_size()
 
-	def areBothStacksSizeOfOneAndCurrentlyPoppingStack(self):
-		return self.__isPoppingStack and self.areBothStacksSizeOfOne()
+    def areBothStacksSizeOfOneAndCurrentlyPoppingStack(self):
+        return self.__isPoppingStack and self.areBothStacksSizeOfOne()
 
-	def areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(self):
-		return not self.__isPoppingStack and self.areBothStacksSizeOfOne()
+    def areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(self):
+        return not self.__isPoppingStack and self.areBothStacksSizeOfOne()
 
-	def areBothStacksSizeOfOne(self):
-		return self._stack.numberStackSize() == 1 and self._stack.operatorStackSize() == 1
+    def areBothStacksSizeOfOne(self):
+        return self._stack.expression_stack_size() == 1 and self._stack.operator_stack_size() == 1
