@@ -46,54 +46,38 @@ class ExpressionParser:
 
         return self._createNodeFromStack(0, tree)
     
-    def _createNodeFromStack(self, depth, tree=None, orphan=None):
-        # print "\nCreate node from stack called with tree: %s" % tree        
+    def _createNodeFromStack(self, depth, tree=None, orphan=None):        
         logic = self._stack_interactor
         stack = self._stack_interactor.stack
-        # print stack
 
         if depth == 0:
             # todo: if popping stack state just depends on an existence of a tree then just use that instead
             logic.query.setIsPoppingStack(False)
-
-        # print "Is currently popping stack: %s" % str(logic.isPoppingStack())
-        # print "Depth is: %s" % str(depth)
-
+    
         if stack.isOperatorStackEmpty():
             if stack.isNumberStackEmpty():
                 return tree
             else:
                 rootNode = logic.popSingleNumberAddition(stack, tree)
                 return self._createNodeFromStack(depth + 1, rootNode)
-        #	print "Operator stack is empty"
-        elif orphan:
-            #	print "We have an orphan"
-
+        elif orphan:            
             rootNode = logic.popOperatorAndJoinNodes(stack, tree, orphan)
             return self._createNodeFromStack(depth + 1, rootNode)
 
-        elif logic.query.isNumberStackCountGreaterThanOperatorStackCount(stack):
-            #	print "Number stack larger than operator stack"
-
+        elif logic.query.isNumberStackCountGreaterThanOperatorStackCount(stack):            
             logic.query.setIsPoppingStack(True)
             rootNode = logic.popRootNode(stack)
             return self._createNodeFromStack(depth + 1, rootNode)
 
-        elif logic.query.areBothStacksSizeOfOneAndCurrentlyPoppingStack(stack):
-            #	print "Both stacks have one and currently popping stack"
-
+        elif logic.query.areBothStacksSizeOfOneAndCurrentlyPoppingStack(stack):            
             rootNode = logic.popJoiningRootNodeToRightOperand(stack, tree)
             return self._createNodeFromStack(depth + 1, rootNode)
 
-        elif logic.query.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(stack):
-            #	print "Both stacks have one and currently not popping stack"
-
+        elif logic.query.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(stack):            
             rootNode = logic.popJoiningRootNodeToLeftOperand(stack, tree)
             return self._createNodeFromStack(depth + 1, rootNode)
 
-        elif logic.query.areBothStacksEqualSize(stack):
-            #	print "Both stacks are equal size"
-
+        elif logic.query.areBothStacksEqualSize(stack):            
             orphan = logic.popRootNode(stack)
             return self._createNodeFromStack(depth + 1, tree, orphan)
 
