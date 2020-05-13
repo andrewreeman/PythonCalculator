@@ -1,14 +1,12 @@
 from typing import Optional
 
-import expressions
-#import pdb
-#import StringStream as strStr
-from StringStream import StringStream
+import classes.expressions as expressions
+from classes.string_stream import StringStream
 
 from expressionstack import ExpressionStack
 
 from operators import AddOperator
-from expressions import NumberExpression
+from classes.expressions import NumberExpression
 from Parsers import NumberParser
 from Parsers import OperatorParser
 from expressionstacklogic import ExpressionStackLogic

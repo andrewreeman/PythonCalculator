@@ -2,7 +2,7 @@ import string
 from typing import Optional
 
 from operators import *
-import expressions
+import classes.expressions as expressions
 
 class OperatorParser:
 	def __init__(self):

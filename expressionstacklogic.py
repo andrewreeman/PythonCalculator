@@ -1,12 +1,13 @@
-import expressions
+import classes.expressions as expressions
 import pdb
-import StringStream as strStr
 
-import expressionstack as expStack
-from expressionstack import ExpressionStack
+from classes.string_stream import StringStream as strStr
+
+
 
 from operators import AddOperator
-from expressions import NumberExpression
+from expressionstack import ExpressionStack
+from classes.expressions import NumberExpression
 from Parsers import NumberParser
 from Parsers import OperatorParser
 

@@ -4,7 +4,8 @@ import expressionstacklogic as logic
 import expressionstack as stack
 import Parsers
 import Tests.utils as utils
-import StringStream as strStr
+
+from classes.string_stream import StringStream
 
 
 import expression_parser
@@ -15,7 +16,7 @@ def createTest(expression, expectedResult):
 	
 	def f():      
 		
-		stream = strStr.StringStream(expression)
+		stream = StringStream(expression)
 
 
 		_logic = logic.ExpressionStackLogic()

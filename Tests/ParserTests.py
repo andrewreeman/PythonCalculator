@@ -1,6 +1,6 @@
 import Parsers
 import Tests.utils as utils
-import StringStream as strStr
+from classes.string_stream import StringStream
 
 
 def createTest(expression):
@@ -8,7 +8,7 @@ def createTest(expression):
 	testName = "Parsing " + expression
 	
 	def f():      
-		stream = strStr.StringStream(expression)
+		stream = StringStream(expression)
 		_numberParser = Parsers.NumberParser()
 		_operatorParser = Parsers.OperatorParser()
 
@@ -23,7 +23,7 @@ def createTest(expression):
 	return utils.Test(testName, f)
 
 def testStream():
-		stream = strStr.StringStream("1+1")
+		stream = StringStream("1+1")
 		
 		def f():
 			stream.peek()

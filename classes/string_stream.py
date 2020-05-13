@@ -1,11 +1,9 @@
 import io 
 	
-# www.jython.org/javadoc/org/python/modules/cStringIO.StringIO.html
 class StringStream:
 	def __init__(self, string: str):	
-		#string = "".join(string.split())
 		self._stream = io.BytesIO()
-		self._stream.write(bytes(string, "utf-8"))
+		self._stream.write(bytes(string, "utf-8"))		
 		self._stream.seek(0)	
 
 	def next(self):				

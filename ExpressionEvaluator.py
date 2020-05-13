@@ -1,6 +1,6 @@
-from StringStream import StringStream
+from classes.string_stream import StringStream
 import Parsers
-import expressions
+import classes.expressions as expressions
 
 import expressionstacklogic as logic
 import expressionstack as stack

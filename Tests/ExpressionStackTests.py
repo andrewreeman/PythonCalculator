@@ -1,7 +1,7 @@
 from ExpressionEvaluator import *
 import expressionstack as expstack
 import expressionstacklogic as logic
-import expressions as exp
+import classes.expressions as exp
 import Tests.utils as utils
 
 def testExpressionStackOperations():
