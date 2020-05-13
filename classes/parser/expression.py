@@ -10,7 +10,7 @@ from classes.parser.number import NumberParser
 from classes.parser.operator import OperatorParser
 
 from classes.expressionstack import ExpressionStack
-from expressionstacklogic import ExpressionStackLogic
+from classes.expressionstacklogic import ExpressionStackLogic
 
 class ExpressionParser:
     def __init__(self, expressionStack: ExpressionStack, expressionStackLogic: ExpressionStackLogic, numberParser: NumberParser, operatorParser: OperatorParser):

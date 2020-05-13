@@ -1,6 +1,6 @@
 from ExpressionEvaluator import *
 from classes.expressionstack import ExpressionStack
-import expressionstacklogic as logic
+from classes.expressionstacklogic import ExpressionStackLogic
 import classes.expression.expressions as exp
 import Tests.utils as utils
 
@@ -40,7 +40,7 @@ def testExpressionStackOperations():
 			stack.pushNumber(2)
 			stack.pushOperator("+")
 			
-			_logic = logic.ExpressionStackLogic()
+			_logic = ExpressionStackLogic()
 
 			rootNode = _logic.popRootNode(stack)
 
@@ -64,7 +64,7 @@ def testExpressionStackOperations():
 		
 
 	def make7Minus4Times8Tree(stack):
-		_logic = logic.ExpressionStackLogic()
+		_logic = ExpressionStackLogic()
 		rootNode = exp.BinaryOperandExpression(4, '*', 8)			
 		
 		stack.pushNumber(7)
@@ -116,7 +116,7 @@ def testExpressionStackOperations():
 		stack.pushNumber(3)
 		stack.pushOperator('+')
 
-		_logic = logic.ExpressionStackLogic()
+		_logic = ExpressionStackLogic()
 		return _logic.popJoiningRootNodeToLeftOperand(stack, originalRootNode)
 	
 	def test3PlusTree(tree):
@@ -159,7 +159,7 @@ def testExpressionStackOperations():
 				stack.pushNumber(2)
 				stack.pushOperator('/')
 
-				_logic = logic.ExpressionStackLogic()
+				_logic = ExpressionStackLogic()
 				
 				rightNode = _logic.popRootNode(stack)
 

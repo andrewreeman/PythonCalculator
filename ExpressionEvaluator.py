@@ -4,7 +4,7 @@ from classes.parser.expression import ExpressionParser
 from classes.parser.operator import OperatorParser
 import classes.expression.expressions as expressions
 
-import expressionstacklogic as logic
+from classes.expressionstacklogic import ExpressionStackLogic
 from classes.expressionstack import ExpressionStack
 
 
@@ -13,7 +13,7 @@ def evaluate(expressionString):
 	return consume(stream)
 
 def consume(stream):		
-	_logic = logic.ExpressionStackLogic()
+	_logic = ExpressionStackLogic()
 	_stack = ExpressionStack()
 	_numberParser = NumberParser()
 	_operatorParser = OperatorParser()

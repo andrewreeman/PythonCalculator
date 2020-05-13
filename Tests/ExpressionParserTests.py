@@ -4,7 +4,7 @@ from classes.parser.number import NumberParser
 from classes.parser.operator import OperatorParser
 from classes.parser.expression import ExpressionParser
 
-import expressionstacklogic as logic
+from classes.expressionstacklogic import ExpressionStackLogic
 from classes.expressionstack import ExpressionStack
 import Tests.utils as utils
 
@@ -19,7 +19,7 @@ def createTest(expression, expectedResult):
 		stream = StringStream(expression)
 
 
-		_logic = logic.ExpressionStackLogic()
+		_logic = ExpressionStackLogic()
 		_stack = ExpressionStack()
 		_numberParser = NumberParser()
 		_operatorParser = OperatorParser()
