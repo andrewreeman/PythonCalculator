@@ -11,7 +11,7 @@ class BinaryOperandExpression(Expression):
 		self._operandB: Expression = operandB	
 	
 	def evaluate(self) -> float:
-		return self._operator.evaluate()(self._operandA.evaluate(),self._operandB.evaluate())	
+		return self._operator.operation()(self._operandA.evaluate(),self._operandB.evaluate())	
 
 	def __str__(self):
 		return f"({str(self._operandA)} {str(self._operator)} {str(self._operandB)})"		

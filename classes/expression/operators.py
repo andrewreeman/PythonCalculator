@@ -3,7 +3,7 @@ from typing import Callable
 OperatorEvaluator = Callable[[float, float], float]
 
 class Operator:
-	def evaluate(self) -> OperatorEvaluator:
+	def operation(self) -> OperatorEvaluator:
 		raise NotImplementedError()
 
 	def precedence(self) -> int:
@@ -16,7 +16,7 @@ class Operator:
 		return self.precedence() == operator.precedence()	
 
 class AddOperator(Operator):	
-	def evaluate(self) -> OperatorEvaluator:				
+	def operation(self) -> OperatorEvaluator:				
 		return lambda a, b: a + b
 
 	def precedence(self) -> int:
@@ -27,7 +27,7 @@ class AddOperator(Operator):
 
 
 class SubtractOperator(Operator):
-	def evaluate(self) -> OperatorEvaluator:
+	def operation(self) -> OperatorEvaluator:
 		return lambda a, b: a - b
 
 	def precedence(self) -> int:
@@ -37,7 +37,7 @@ class SubtractOperator(Operator):
 		return "-"
 
 class MultiplyOperator(Operator):
-	def evaluate(self) -> OperatorEvaluator:
+	def operation(self) -> OperatorEvaluator:
 		return lambda a,b: a * b
 
 	def precedence(self) -> int:
@@ -47,7 +47,7 @@ class MultiplyOperator(Operator):
 		return "*"
 
 class DivideOperator(Operator):
-	def evaluate(self) -> OperatorEvaluator:
+	def operation(self) -> OperatorEvaluator:
 		return lambda a,b: 0 if b == 0 else a/b	
 
 	def precedence(self) -> int:
