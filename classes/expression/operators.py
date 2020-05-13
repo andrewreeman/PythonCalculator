@@ -1,18 +1,29 @@
+from __future__ import annotations # used so Operator class can reference Operator type
 from typing import Callable
 
 OperatorEvaluator = Callable[[float, float], float]
 
 class Operator:
-	def operation(self) -> OperatorEvaluator:
+	def operation(self) -> OperatorEvaluator:		
+		"""Provide a function for operating on two numbers		
+
+		Returns:
+			OperatorEvaluator -- A function that can operate on two floats
+		"""
 		raise NotImplementedError()
 
 	def precedence(self) -> int:
+		"""The higher precedence operators should be performed before the lower precedence operators		
+
+		Returns:
+			int -- The precedence of this operator
+		"""
 		raise NotImplementedError()
 	
-	def is_lower_precedence_than(self, operator):
+	def is_lower_precedence_than(self, operator: Operator):
 		return self.precedence() < operator.precedence()	
 	
-	def is_same_precedence_as(self, operator):
+	def is_same_precedence_as(self, operator: Operator):
 		return self.precedence() == operator.precedence()	
 
 class AddOperator(Operator):	

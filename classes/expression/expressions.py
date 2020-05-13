@@ -2,6 +2,11 @@ from classes.expression.operators import Operator
 
 class Expression:
 	def evaluate(self) -> float:
+		"""Evaluate the expression		
+
+		Returns:
+			float -- The result of the evaluated expression
+		"""
 		raise NotImplementedError()	
 
 class BinaryOperandExpression(Expression):
@@ -21,7 +26,7 @@ class NumberExpression(Expression):
 		self._char: str = char
 		self._isNegative: bool = isNegative		
 
-	def evaluate(self) -> float:
+	def evaluate(self) -> float:		
 		number = float(self._char)
 		if self._isNegative:
 			return -number
