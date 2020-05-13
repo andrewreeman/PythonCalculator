@@ -1,6 +1,5 @@
 from ExpressionEvaluator import *
 from classes.parser.stack.stack import ParserStack
-from classes.parser.stack.query import ParserStackQuery
 import classes.expression.expressions as exp
 import Tests.utils as utils
 
@@ -40,7 +39,7 @@ def testExpressionStackOperations():
 			stack.pushNumber(2)
 			stack.pushOperator("+")
 			
-			_logic = ParserStackInteractor(stack, ParserStackQuery()) 
+			_logic = ParserStackInteractor(stack)
 
 			rootNode = _logic.popRootNode(stack)
 
@@ -68,7 +67,7 @@ def testExpressionStackOperations():
 		
 		stack.pushNumber(7)
 		stack.pushOperator('-')
-		_logic = ParserStackInteractor(stack, ParserStackQuery())
+		_logic = ParserStackInteractor(stack)
 
 		return _logic.popJoiningRootNodeToRightOperand(stack, rootNode)
 			
@@ -116,7 +115,7 @@ def testExpressionStackOperations():
 		stack.pushNumber(3)
 		stack.pushOperator('+')
 
-		_logic = ParserStackInteractor(stack, ParserStackQuery())
+		_logic = ParserStackInteractor(stack)
 		return _logic.popJoiningRootNodeToLeftOperand(stack, originalRootNode)
 	
 	def test3PlusTree(tree):
@@ -159,7 +158,7 @@ def testExpressionStackOperations():
 				stack.pushNumber(2)
 				stack.pushOperator('/')
 
-				_logic = ParserStackInteractor(stack, ParserStackQuery())
+				_logic = ParserStackInteractor(stack)
 				
 				rightNode = _logic.popRootNode(stack)
 

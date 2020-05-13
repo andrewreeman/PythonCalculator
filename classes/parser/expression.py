@@ -60,8 +60,8 @@ class ExpressionParser:
     def _parse_operator(self, stream: StringStream):
         return self._operatorParser.parse(stream)     
 
-    def _evaluate_bracket_expression(self, stream):               
-        new_interactor = ParserStackInteractor(ParserStack(), ParserStackQuery())
+    def _evaluate_bracket_expression(self, stream):
+        new_interactor = ParserStackInteractor(ParserStack())
         bracket_expression_parser = ExpressionParser(new_interactor, self._numberParser, self._operatorParser)
         self._stack_interactor.stack.pushNumber(bracket_expression_parser.parse(stream))
         

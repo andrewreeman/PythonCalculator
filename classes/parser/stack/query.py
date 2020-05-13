@@ -10,8 +10,9 @@ from classes.parser.operator import OperatorParser
 from classes.parser.stack.stack import ParserStack
 
 class ParserStackQuery:
-	def __init__(self):
+	def __init__(self, stack: ParserStack):
 		self.__isPoppingStack = False
+		self._stack: ParserStack = stack
 
 	def setIsPoppingStack(self, isPoppingStack):
 		self.__isPoppingStack = isPoppingStack
@@ -19,34 +20,34 @@ class ParserStackQuery:
 	def isPoppingStack(self):
 		return self.__isPoppingStack	
 
-	def isTopOperatorStackLowerPrecedence(self, stack, operator):
-		topOperator = stack.peekOperator()
+	def isTopOperatorStackLowerPrecedence(self, operator):
+		topOperator = self._stack.peekOperator()
 		if topOperator:
 			return topOperator.isLowerPrecedenceThan(operator)
 		else:
 			return False
 
-	def isTopOperatorStackSamePrecedence(self, expressionStack, operator):
-		topOperator = expressionStack.peekOperator()
+	def isTopOperatorStackSamePrecedence(self, operator):
+		topOperator = self._stack.peekOperator()
 		if topOperator:
 			return topOperator.isSamePrecedenceAs(operator)
 		else:
 			return False
 
-	def isNumberStackCountGreaterThanOperatorStackCount(self, expressionStack):
-		return expressionStack.numberStackSize() > expressionStack.operatorStackSize()
+	def isNumberStackCountGreaterThanOperatorStackCount(self):
+		return self._stack.numberStackSize() > self._stack.operatorStackSize()
 
-	def areBothStacksEmpty(self, stack):		
-		return stack.isOperatorStackEmpty() and stack.isNumberStackEmpty()
+	def areBothStacksEmpty(self):		
+		return self._stack.isOperatorStackEmpty() and self._stack.isNumberStackEmpty()
 
-	def areBothStacksEqualSize(self, expressionStack):
-		return expressionStack.numberStackSize() == expressionStack.operatorStackSize()
+	def areBothStacksEqualSize(self):
+		return self._stack.numberStackSize() == self._stack.operatorStackSize()
 
-	def areBothStacksSizeOfOneAndCurrentlyPoppingStack(self, expressionStack):
-		return self.__isPoppingStack and self.areBothStacksSizeOfOne(expressionStack)
+	def areBothStacksSizeOfOneAndCurrentlyPoppingStack(self):
+		return self.__isPoppingStack and self.areBothStacksSizeOfOne()
 
-	def areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(self, expressionStack):
-		return not self.__isPoppingStack and self.areBothStacksSizeOfOne(expressionStack)
+	def areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(self):
+		return not self.__isPoppingStack and self.areBothStacksSizeOfOne()
 
-	def areBothStacksSizeOfOne(self, expressionStack):
-		return expressionStack.numberStackSize() == 1 and expressionStack.operatorStackSize() == 1
+	def areBothStacksSizeOfOne(self):
+		return self._stack.numberStackSize() == 1 and self._stack.operatorStackSize() == 1

@@ -18,10 +18,9 @@ def createTest(expression, expectedResult):
 	def f():      
 		
 		stream = StringStream(expression)
-
-		_query = ParserStackQuery()		
+		
 		_stack = ParserStack()
-		_logic = ParserStackInteractor(_stack, _query)
+		_logic = ParserStackInteractor(_stack)
 		_numberParser = NumberParser()
 		_operatorParser = OperatorParser()
 

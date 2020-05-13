@@ -15,7 +15,7 @@ def evaluate(expressionString):
 	return parse(stream).evaluate()
 
 def parse(stream):		
-	_logic = ParserStackInteractor(ParserStack(), ParserStackQuery())	
+	_logic = ParserStackInteractor(ParserStack())	
 	_numberParser = NumberParser()
 	_operatorParser = OperatorParser()
 

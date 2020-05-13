@@ -12,9 +12,9 @@ from classes.parser.stack.stack import ParserStack
 from classes.parser.stack.query import ParserStackQuery
 
 class ParserStackInteractor:
-    def __init__(self, stack: ParserStack, query: ParserStackQuery):
+    def __init__(self, stack: ParserStack):
         self._stack: ParserStack = stack        
-        self._query: ParserStackQuery = query
+        self._query: ParserStackQuery = ParserStackQuery(self._stack)
 
     def popRootNode(self, expressionStack):
         rightOperand = expressionStack.popNumber()
@@ -45,9 +45,9 @@ class ParserStackInteractor:
         if not operatorToken:
             return
         
-        if self.stack.isOperatorStackEmpty() or self.query.isTopOperatorStackLowerPrecedence(self.stack, operatorToken):
+        if self.stack.isOperatorStackEmpty() or self.query.isTopOperatorStackLowerPrecedence(operatorToken):
             self.stack.pushOperator(operatorToken)                                                                                               
-        elif self.stack.numberStackSize() >= 2 and self.stack.operatorStackSize() >= 1 and self.query.isTopOperatorStackSamePrecedence(self.stack, operatorToken):
+        elif self.stack.numberStackSize() >= 2 and self.stack.operatorStackSize() >= 1 and self.query.isTopOperatorStackSamePrecedence(operatorToken):
 
             # should this be replaceable with single call to createNodeFromStack?
             operandB = self.stack.popNumber()
