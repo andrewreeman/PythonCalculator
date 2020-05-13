@@ -42,7 +42,7 @@ class ParserStackInteractor:
             self._stack.pushOperator(operatorToken)                                                                                               
         elif self._stack.numberStackSize() >= 2 and self._stack.operatorStackSize() >= 1 and self.query.isTopOperatorStackSamePrecedence(operatorToken):
 
-            # should this be replaceable with single call to createNodeFromStack?
+            # this should be replaceable with single call to expression_creator() but this does not work
             operandB = self._stack.popNumber()
             operandA = self._stack.popNumber()
             operator = self._stack.popOperator()
