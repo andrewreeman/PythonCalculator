@@ -1,71 +1,57 @@
-class AddOperator:
-	def evaluate(self):				
+from typing import Callable
+
+OperatorEvaluator = Callable[[float, float], float]
+
+class Operator:
+	def evaluate(self) -> OperatorEvaluator:
+		raise NotImplementedError()
+
+	def precedence(self) -> int:
+		raise NotImplementedError()
+	
+	def is_lower_precedence_than(self, operator):
+		return self.precedence() < operator.precedence()	
+	
+	def is_same_precedence_as(self, operator):
+		return self.precedence() == operator.precedence()	
+
+class AddOperator(Operator):	
+	def evaluate(self) -> OperatorEvaluator:				
 		return lambda a, b: a + b
 
-	def precedence(self):
-		return 0
-
-	def is_lower_precedence_than(self, operator):
-		return is_operator_lower_precedence_than_other_operator(self, operator)
-
-	def is_same_precedence_as(self, operator):
-		return is_same_precedence_as(self, operator)
+	def precedence(self) -> int:
+		return 0		
 
 	def __str__(self):
 		return "+"
 
 
-class SubtractOperator:
-	def evaluate(self):
+class SubtractOperator(Operator):
+	def evaluate(self) -> OperatorEvaluator:
 		return lambda a, b: a - b
 
-	def precedence(self):
-		return 0
-
-	def is_lower_precedence_than(self, operator):
-		return is_operator_lower_precedence_than_other_operator(self, operator)
-	
-	def is_same_precedence_as(self, operator):
-		return is_same_precedence_as(self, operator)
+	def precedence(self) -> int:
+		return 0			
 	
 	def __str__(self):
 		return "-"
 
-class MultiplyOperator:
-	def evaluate(self):
+class MultiplyOperator(Operator):
+	def evaluate(self) -> OperatorEvaluator:
 		return lambda a,b: a * b
 
-	def precedence(self):
-		return 1
-
-	def is_lower_precedence_than(self, operator):
-		return is_operator_lower_precedence_than_other_operator(self, operator)
-	
-	def is_same_precedence_as(self, operator):
-		return is_same_precedence_as(self, operator)
+	def precedence(self) -> int:
+		return 1			
 	
 	def __str__(self):
 		return "*"
 
-class DivideOperator:
-	def evaluate(self):
+class DivideOperator(Operator):
+	def evaluate(self) -> OperatorEvaluator:
 		return lambda a,b: 0 if b == 0 else a/b	
 
-	def precedence(self):
-		return 1
-
-	def is_lower_precedence_than(self, operator):
-		return is_operator_lower_precedence_than_other_operator(self, operator)
-	
-	def is_same_precedence_as(self, operator):
-		return is_same_precedence_as(self, operator)
+	def precedence(self) -> int:
+		return 1		
 	
 	def __str__(self):
 		return "/"
-
-def is_same_precedence_as(operatorA, operatorB):
-	return operatorA.precedence() == operatorB.precedence()
-
-def is_operator_lower_precedence_than_other_operator(operatorA, operatorB):
-	result = operatorA.precedence() < operatorB.precedence()
-	return result
