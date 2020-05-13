@@ -3,10 +3,10 @@ import pdb
 
 from classes.string_stream import StringStream as strStr
 from operators import AddOperator
-from expressionstack import ExpressionStack
+from classes.expressionstack import ExpressionStack
 from classes.expression.expressions import NumberExpression
-from classes.parser.Parsers import NumberParser
-import classes.parser.operator as OperatorParser
+from classes.parser.number import NumberParser
+from classes.parser.operator import OperatorParser
 
 class ExpressionStackLogic:
 	def __init__(self):

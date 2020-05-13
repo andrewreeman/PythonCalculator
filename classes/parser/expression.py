@@ -2,11 +2,14 @@ from typing import Optional
 
 import classes.expression.expressions as expressions
 from classes.string_stream import StringStream
-from expressionstack import ExpressionStack
+
 from operators import AddOperator
+
 from classes.expression.expressions import NumberExpression
 from classes.parser.number import NumberParser
 from classes.parser.operator import OperatorParser
+
+from classes.expressionstack import ExpressionStack
 from expressionstacklogic import ExpressionStackLogic
 
 class ExpressionParser:

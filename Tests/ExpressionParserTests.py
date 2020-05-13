@@ -1,15 +1,14 @@
 from typing import Optional
 
-import expressionstacklogic as logic
-import expressionstack as stack
-import classes.parser.Parsers as Parsers
+from classes.parser.number import NumberParser
 from classes.parser.operator import OperatorParser
+from classes.parser.expression import ExpressionParser
+
+import expressionstacklogic as logic
+from classes.expressionstack import ExpressionStack
 import Tests.utils as utils
 
 from classes.string_stream import StringStream
-
-
-import expression_parser
 
 def createTest(expression, expectedResult):
 
@@ -21,11 +20,11 @@ def createTest(expression, expectedResult):
 
 
 		_logic = logic.ExpressionStackLogic()
-		_stack = stack.ExpressionStack()
-		_numberParser = Parsers.NumberParser()
+		_stack = ExpressionStack()
+		_numberParser = NumberParser()
 		_operatorParser = OperatorParser()
 
-		_expressionParser = expression_parser.ExpressionParser(_stack, _logic, _numberParser, _operatorParser)
+		_expressionParser = ExpressionParser(_stack, _logic, _numberParser, _operatorParser)
 		
 		result = _expressionParser.parse(stream)
 		if not result.evaluate() == expectedResult:

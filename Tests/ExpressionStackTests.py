@@ -1,5 +1,5 @@
 from ExpressionEvaluator import *
-import expressionstack as expstack
+from classes.expressionstack import ExpressionStack
 import expressionstacklogic as logic
 import classes.expression.expressions as exp
 import Tests.utils as utils
@@ -20,7 +20,7 @@ def testExpressionStackOperations():
 	
 	def testCorrectOperatorSizeReported():
 		def f():
-			stack = expstack.ExpressionStack()
+			stack = ExpressionStack()
 			stack.pushOperator(operatorDummy)	
 			stack.pushOperator(operatorDummy2)
 			stack.pushOperator(operatorDummy3)
@@ -35,7 +35,7 @@ def testExpressionStackOperations():
 
 	def testCanExpressionStackLogicPopCorrectRootNode():
 		def f():
-			stack = expstack.ExpressionStack()
+			stack = ExpressionStack()
 			stack.pushNumber(1)
 			stack.pushNumber(2)
 			stack.pushOperator("+")
@@ -97,7 +97,7 @@ def testExpressionStackOperations():
 		
 	def testCanJoinANodeAsRightOperand():
 		def f():	
-			stack = expstack.ExpressionStack()		
+			stack = ExpressionStack()		
 			newRootNode = make7Minus4Times8Tree(stack)
 			return test7Minus4Times8Tree(newRootNode)
 
@@ -106,7 +106,7 @@ def testExpressionStackOperations():
 
 
 	def make7Minus4Times8Plus3Tree(stack):
-		stack = expstack.ExpressionStack()		
+		stack = ExpressionStack()		
 		originalRootNode = make7Minus4Times8Tree(stack)
 		fail = test7Minus4Times8Tree(originalRootNode)
 			
@@ -136,7 +136,7 @@ def testExpressionStackOperations():
 	def testCanJoinANodeAsLeftOperand():
 		def f():			
 			try:
-				stack = expstack.ExpressionStack()								
+				stack = ExpressionStack()								
 				newRootNode = make7Minus4Times8Plus3Tree(stack)
 				return test3PlusTree(newRootNode)				
 			except ValueError as err:
@@ -148,7 +148,7 @@ def testExpressionStackOperations():
 	def testCanJoinTwoNodesWithOperator():			
 		def f():			
 			try:
-				stack = expstack.ExpressionStack()								
+				stack = ExpressionStack()								
 				newRootNode = make7Minus4Times8Plus3Tree(stack)
 				fail = test3PlusTree(newRootNode)				
 				

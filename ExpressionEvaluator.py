@@ -1,11 +1,12 @@
 from classes.string_stream import StringStream
-import classes.parser.Parsers as Parsers
+from classes.parser.number import NumberParser
+from classes.parser.expression import ExpressionParser
 from classes.parser.operator import OperatorParser
 import classes.expression.expressions as expressions
 
 import expressionstacklogic as logic
-import expressionstack as stack
-import expression_parser
+from classes.expressionstack import ExpressionStack
+
 
 def evaluate(expressionString):
 	stream = StringStream(expressionString)	
@@ -13,8 +14,8 @@ def evaluate(expressionString):
 
 def consume(stream):		
 	_logic = logic.ExpressionStackLogic()
-	_stack = stack.ExpressionStack()
-	_numberParser = Parsers.NumberParser()
+	_stack = ExpressionStack()
+	_numberParser = NumberParser()
 	_operatorParser = OperatorParser()
 
-	return expression_parser.ExpressionParser(_stack, _logic, _numberParser, _operatorParser).parse(stream).evaluate()
+	return ExpressionParser(_stack, _logic, _numberParser, _operatorParser).parse(stream).evaluate()
