@@ -2,6 +2,9 @@ from classes.parser.stack.stack import ParserStack
 
 
 class ParserStackQuery:
+    """This class is used for querying the state of a ParserStack
+    """
+    
     def __init__(self, stack: ParserStack):
         self.__isPoppingStack = False
         self._stack: ParserStack = stack
