@@ -1,5 +1,6 @@
+from typing import Optional
+
 import classes.expression.expressions as expressions
-import pdb
 
 from classes.string_stream import StringStream as strStr
 from classes.expression.operators import AddOperator
@@ -39,6 +40,26 @@ class ParserStackInteractor:
             leftNode = NumberExpression('0', False)
         if operator and leftNode and rightNode:
             return expressions.BinaryOperandExpression(leftNode, operator, rightNode)
+
+    def pushOperatorToken(self, operatorToken, expression_creator):
+        if not operatorToken:
+            return
+        
+        if self.stack.isOperatorStackEmpty() or self.query.isTopOperatorStackLowerPrecedence(self.stack, operatorToken):
+            self.stack.pushOperator(operatorToken)                                                                                               
+        elif self.stack.numberStackSize() >= 2 and self.stack.operatorStackSize() >= 1 and self.query.isTopOperatorStackSamePrecedence(self.stack, operatorToken):
+
+            # should this be replaceable with single call to createNodeFromStack?
+            operandB = self.stack.popNumber()
+            operandA = self.stack.popNumber()
+            operator = self.stack.popOperator()
+            evaluatable_expression = expressions.BinaryOperandExpression(operandA, operator, operandB)
+            self.stack.pushNumber(evaluatable_expression)
+            self.stack.pushOperator(operatorToken)            
+        else:          
+            expression_creator()
+            self.stack.pushOperator(operatorToken)                         
+                
 
     @property
     def query(self) -> ParserStackQuery:

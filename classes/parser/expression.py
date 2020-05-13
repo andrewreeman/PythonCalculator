@@ -22,6 +22,11 @@ class ExpressionParser:
     def parse(self, stream):
         tree = None
 
+        def onStackCanCreateExpression():            
+            while not self._stack_interactor.stack.isOperatorStackEmpty():
+                nonlocal tree
+                tree = self._createNodeFromStack(0, tree)
+
         while stream.hasChars() and not stream.peek() == ')':
 
             if self._is_not_consumable(stream):
@@ -33,23 +38,8 @@ class ExpressionParser:
                 continue
 
             operatorToken = self._parse_operator(stream)
-
-            if operatorToken:                
-                if self._stack_interactor.stack.isOperatorStackEmpty() or self._stack_interactor.query.isTopOperatorStackLowerPrecedence(self._stack_interactor.stack, operatorToken):
-                    self._stack_interactor.stack.pushOperator(operatorToken)                                                                                   
-                elif self._stack_interactor.stack.numberStackSize() >= 2 and self._stack_interactor.stack.operatorStackSize() >= 1 and self._stack_interactor.query.isTopOperatorStackSamePrecedence(self._stack_interactor.stack, operatorToken):
-
-                    # should this be replaceable with single call to createNodeFromStack?
-                    operandB = self._stack_interactor.stack.popNumber()
-                    operandA = self._stack_interactor.stack.popNumber()
-                    operator = self._stack_interactor.stack.popOperator()
-                    evaluatable_expression = expressions.BinaryOperandExpression(operandA, operator, operandB)
-                    self._stack_interactor.stack.pushNumber(evaluatable_expression)
-                    self._stack_interactor.stack.pushOperator(operatorToken)
-                else:                    
-                    while not self._stack_interactor.stack.isOperatorStackEmpty():
-                        tree = self._createNodeFromStack(0, tree)
-                    self._stack_interactor.stack.pushOperator(operatorToken)
+            
+            self._stack_interactor.pushOperatorToken(operatorToken, onStackCanCreateExpression)
             
             if stream.peek() == '(':
                 stream.next()                
