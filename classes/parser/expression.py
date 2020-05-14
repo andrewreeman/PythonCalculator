@@ -81,7 +81,7 @@ class ExpressionParser:
         return stream.peek() == '('
 
     def _can_child_parser_consume(self, stream: StringStream) -> bool:
-        return self._number_parser.canConsume(stream) or self._operator_parser.can_consume(stream)
+        return self._number_parser.can_consume(stream) or self._operator_parser.can_consume(stream)
 
     def _is_subtract_character(self, stream: StringStream) -> bool:
         return self._stack_interactor.query.is_awaiting_operator() and stream.peek() == '-'

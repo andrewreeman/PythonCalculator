@@ -1,57 +1,51 @@
 import string
 from typing import Optional
 
-from ..expression.operators import *
-import classes.expression.expressions as expressions
+from classes.expression.expressions import NumberExpression
+from classes.string_stream import StringStream
+
 
 class NumberParser:
-	def __init__(self):
-		pass
+    def parse(self, stream: StringStream) -> Optional[NumberExpression]:
+        if not self.can_consume(stream):
+            return None
 
-	def parse(self, stream) -> Optional[expressions.NumberExpression]:
-		if not self.__canConsume(stream):
-			return None
+        token: str = stream.peek()
+        if token.isspace():
+            stream.next()
+            return self.parse(stream)
 
-		token: str = stream.peek()	
-		if token.isspace():
-			stream.next()
-			return parse(self, stream)
+        isNegative = self._isNegativeSign(token)
 
-		isNegative = self.__isNegativeSign(token)		
-		
-		if isNegative:			
-			stream.next()
-		
-		numberToken = self.__consumeNumber(stream)		
-		return expressions.NumberExpression(numberToken, isNegative)
+        if isNegative:
+            stream.next()
 
-	def canConsume(self, stream):
-		return self.__canConsume(stream)
-		
-	def __canConsume(self, stream):
-		token = stream.peek()			
-		return self.__isSingleDigitNum(token) or self.__isNegativeSign(token)
-	
+        numberToken = self._consumeNumber(stream)
+        return NumberExpression(numberToken, isNegative)
 
-	def __consumeNumber(self, stream):
+    def can_consume(self, stream: StringStream) -> bool:
+        token = stream.peek()
+        return self._isSingleDigitNum(token) or self._isNegativeSign(token)
 
-		if not self.__canConsumeDigit(stream):
-			return False
-		token = stream.next()		
-		while self.__canConsumeDigit(stream):
-			token += stream.next()
-		return token					
-	
-	def __canConsumeDigit(self, stream):
-		token = stream.peek()
-		return self.__isSingleDigitNum(token)
-		
-	def __isSingleDigitNum(self, char):
-		if char == "": return False
-		return char in string.digits
-	
-	def __isNegativeSign(self, char):
-		result = char == '-'
-		return result
+    def _consumeNumber(self, stream: StringStream) -> Optional[NumberExpression]:
+        if not self._can_consumeDigit(stream):
+            return None
 
+        token = stream.next()
+        while self._can_consumeDigit(stream):
+            token += stream.next()
+        return token
 
+    def _can_consumeDigit(self, stream: StringStream) -> bool:
+        token = stream.peek()
+        return self._isSingleDigitNum(token)
+
+    def _isSingleDigitNum(self, char: str) -> bool:
+        if len(char) == 0:
+            return False
+
+        return char in string.digits
+
+    def _isNegativeSign(self, char: str) -> bool:
+        result = char == '-'
+        return result

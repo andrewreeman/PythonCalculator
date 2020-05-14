@@ -22,9 +22,9 @@ class OperatorParser:
         elif token.isspace():
             return self.parse(stream)
 
-    def can_consume(self, stream):
+    def can_consume(self, stream: StringStream) -> bool:
         token = stream.peek()
         return self._isOperator(token)
 
-    def _isOperator(self, token):
+    def _isOperator(self, token: str) -> bool:
         return token == '+' or token == '-' or token == '*' or token == '/' or token == '^' or token == '%'
