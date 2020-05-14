@@ -1,34 +1,30 @@
-from ..expression.operators import *
+from typing import Optional
+
+from classes.expression.operators import AddOperator, SubtractOperator, MultiplyOperator, DivideOperator, Operator
+from classes.string_stream import StringStream
+
 
 class OperatorParser:
-	def __init__(self):
-		pass
-	
-	def parse(self, stream):
-		if not self.__canConsume(stream):
-			return False
-		
-		token: str = stream.next()
+    def parse(self, stream: StringStream) -> Optional[Operator]:
+        if not self.can_consume(stream):
+            return None
 
-		if token == '+':
-			return AddOperator()
-		elif token == '-':
-			return SubtractOperator()
-		elif token == '*':
-			return MultiplyOperator()
-		elif token == '/':
-			return DivideOperator()
-		elif token.isspace():
-			return parse(self, stream)
-		
+        token: str = stream.next()
 
-	def canConsume(self, stream):
-		return self.__canConsume(stream)		
+        if token == '+':
+            return AddOperator()
+        elif token == '-':
+            return SubtractOperator()
+        elif token == '*':
+            return MultiplyOperator()
+        elif token == '/':
+            return DivideOperator()
+        elif token.isspace():
+            return self.parse(stream)
 
-	def __canConsume(self, stream):
-		token = stream.peek()
-		return self.__isOperator(token)
-	
-	def __isOperator(self, token):
-		return token == '+' or token == '-' or token == '*' or token == '/' or token == '^' or token == '%'
-	
+    def can_consume(self, stream):
+        token = stream.peek()
+        return self._isOperator(token)
+
+    def _isOperator(self, token):
+        return token == '+' or token == '-' or token == '*' or token == '/' or token == '^' or token == '%'
