@@ -1,3 +1,5 @@
+from typing import Optional
+
 from classes.expression.expressions import BinaryOperandExpression, NumberExpression, Expression
 from classes.expression.operators import Operator
 
@@ -9,6 +11,10 @@ class ParserStackInteractor:
     def __init__(self, stack: ParserStack):
         self._stack: ParserStack = stack
         self._query: ParserStackQuery = ParserStackQuery(self._stack)
+
+    @property
+    def query(self) -> ParserStackQuery:
+        return self._query
 
     def pop_binary_expression(self) -> BinaryOperandExpression:
         right_operand = self._stack.pop_expression()
@@ -33,7 +39,7 @@ class ParserStackInteractor:
     def push_expression(self, expression: Expression):
         self._stack.push_expression(expression)
 
-    def push_operator(self, operator: Operator, create_expression_callback):
+    def push_operator(self, operator: Optional[Operator]):
         if not operator:
             return
 
@@ -43,11 +49,11 @@ class ParserStackInteractor:
             operator_from_stack = self._stack.pop_operator()
             evaluatable_expression = BinaryOperandExpression(operandA, operator_from_stack, operandB)
             self._stack.push_expression(evaluatable_expression)
-        elif self.query.can_create_expression_with_lower_precedence(operator):
-            create_expression_callback()
 
         self._stack.push_operator(operator)
 
-    @property
-    def query(self) -> ParserStackQuery:
-        return self._query
+    def should_create_expression_before_pushing(self, operator: Operator) -> bool:
+        if self.query.can_create_expression_with_same_precedence(operator):
+            return False
+
+        return self.query.can_create_expression_with_lower_precedence(operator)

@@ -18,10 +18,10 @@ class ExpressionParser:
     def __init__(self, stack_interactor: ParserStackInteractor, numberParser: NumberParser, operatorParser: OperatorParser):
         self._numberParser: NumberParser = numberParser
         self._operatorParser: OperatorParser = operatorParser
-        self._stack_interactor: ParserStackInteractor = stack_interactor  
-        self._tree = ExpressionTreeCreator(stack_interactor)  
+        self._stack_interactor: ParserStackInteractor = stack_interactor
+        self._tree = ExpressionTreeCreator(stack_interactor)
 
-    def parse(self, stream):                
+    def parse(self, stream):
         while stream.hasChars() and not stream.peek() == ')':
 
             if not self.canConsume(stream):
@@ -33,16 +33,19 @@ class ExpressionParser:
                 continue
 
             operatorToken = self._parse_operator(stream)
-            
-            self._stack_interactor.push_operator(operatorToken, self._tree.create_expression)
-            
+
+            if self._stack_interactor.should_create_expression_before_pushing(operatorToken):
+                self._tree.create_expression()
+
+            self._stack_interactor.push_operator(operatorToken)
+
             if stream.peek() == '(':
-                stream.next()                
-                self._evaluate_bracket_expression(stream)                                
+                stream.next()
+                self._evaluate_bracket_expression(stream)
 
         return self._tree.create_expression()
-    
-    def canConsume(self, stream: StringStream) -> bool:                                
+
+    def canConsume(self, stream: StringStream) -> bool:
         return  stream.peek() == '(' or self._numberParser.canConsume(stream) or self._operatorParser.canConsume(stream)
 
     def _parse_number(self, stream: StringStream) -> Optional[NumberExpression]:
@@ -53,19 +56,19 @@ class ExpressionParser:
         numberToken: Optional[NumberExpression] = self._numberParser.parse(stream)
 
         if numberToken:
-            self._stack_interactor.push_expression(numberToken)            
+            self._stack_interactor.push_expression(numberToken)
 
         return numberToken
 
     def _parse_operator(self, stream: StringStream):
-        return self._operatorParser.parse(stream)     
+        return self._operatorParser.parse(stream)
 
     def _evaluate_bracket_expression(self, stream):
         new_interactor = ParserStackInteractor(ParserStack())
         bracket_expression_parser = ExpressionParser(new_interactor, self._numberParser, self._operatorParser)
         self._stack_interactor.push_expression(bracket_expression_parser.parse(stream))
-        
+
         if stream.peek() == ')':
-            stream.next()    
+            stream.next()
 
 
