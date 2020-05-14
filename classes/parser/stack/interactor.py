@@ -8,6 +8,8 @@ from classes.parser.stack.query import ParserStackQuery
 
 
 class ParserStackInteractor:
+    """ Provides complex methods for interacting with the ParserStack
+    """
     def __init__(self, stack: ParserStack):
         self._stack: ParserStack = stack
         self._query: ParserStackQuery = ParserStackQuery(self._stack)
