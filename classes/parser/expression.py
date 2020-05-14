@@ -26,7 +26,7 @@ class ExpressionParser:
         self._tree: ExpressionTreeCreator = ExpressionTreeCreator(stack_interactor)
 
     def parse(self, stream: StringStream) -> Optional[Expression]:
-        while stream.hasChars() and not stream.peek() == ')':
+        while stream.has_chars() and not stream.peek() == ')':
 
             if not self._can_consume(stream):
                 stream.next()

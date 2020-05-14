@@ -17,7 +17,7 @@ def createTest(expression):
 		operator = _operatorParser.parse(stream)		
 		number = _numberParser.parse(stream)		
 
-		if stream.hasChars():
+		if stream.has_chars():
 			return "Stream should now be empty"
 
 	return utils.Test(testName, f)
@@ -37,7 +37,7 @@ def testStream():
 			stream.peek()
 			stream.peek()
 
-			if stream.hasChars():
+			if stream.has_chars():
 				return "Stream should be empty"
 
 		return utils.Test("Test that stream operators work", f)
