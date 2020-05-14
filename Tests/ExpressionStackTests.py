@@ -1,13 +1,11 @@
 from ExpressionEvaluator import *
-import expressionstack as expstack
-import expressionstacklogic as logic
-import expressions as exp
+from classes.parser.stack.stack import ParserStack
+import classes.expression.expressions as exp
 import Tests.utils as utils
 
 def testExpressionStackOperations():
 	tester = utils.Tester("Expression stack operation tests")
 	
-
 	operatorDummy = 0
 	operatorDummy2 = 1
 	operatorDummy3 = 2
@@ -20,84 +18,76 @@ def testExpressionStackOperations():
 	
 	def testCorrectOperatorSizeReported():
 		def f():
-			stack = expstack.ExpressionStack()
-			stack.pushOperator(operatorDummy)	
-			stack.pushOperator(operatorDummy2)
-			stack.pushOperator(operatorDummy3)
+			stack = ParserStack()
+			stack.push_operator(operatorDummy)	
+			stack.push_operator(operatorDummy2)
+			stack.push_operator(operatorDummy3)
 
-			if not stack.operatorStackSize() == 3:
-				return "Operator stack size does not equal 3. Instead it equals: %d" % stack.operatorStackSize()
-		return utils.Test("Test that correct operator size is reported", f)	
+			if not stack.operator_stack_size() == 3:
+				return "Operator stack size does not equal 3. Instead it equals: %d" % stack.operator_stack_size()
+		return utils.Test("Test that correct operator size is reported", f)
 
-		
-	tester.addTest(testCorrectOperatorSizeReported())	
-
-
-	def testCanExpressionStackLogicPopCorrectRootNode():
+	def testCanParserStackQueryPopCorrectRootNode():
 		def f():
-			stack = expstack.ExpressionStack()
-			stack.pushNumber(1)
-			stack.pushNumber(2)
-			stack.pushOperator("+")
+			stack = ParserStack()
+			stack.push_expression(1)
+			stack.push_expression(2)
+			stack.push_operator("+")
 			
-			_logic = logic.ExpressionStackLogic()
-
-			rootNode = _logic.popRootNode(stack)
+			_logic = ParserStackInteractor(stack)
+			rootNode = _logic.pop_binary_expression()
 
 			if not rootNode:
 				return "No root node created"
 			
-			if rootNode.leftOperand() != 1:
-				return "Root node left operand does not equal 1. Instead it equals: " + str(rootNode.leftOperand())
+			if rootNode._operandA != 1:
+				return "Root node left operand does not equal 1. Instead it equals: " + str(rootNode._operandA)
 
-			if rootNode.rightOperand() != 2:
-				return "Root node right operand does not equal 2. Instead it equals: " + str(rootNode.rightOperand())
+			if rootNode._operandB != 2:
+				return "Root node right operand does not equal 2. Instead it equals: " + str(rootNode._operandB)
 
-			if rootNode.operator() != "+":
-				return "Root node operator does not equal '+'. Instead it equals: " + rootNode.operator()
-		
-
+			if rootNode._operator != "+":
+				return "Root node operator does not equal '+'. Instead it equals: " + rootNode._operator		
 			
 		return utils.Test("Test that an expression stack logic instance will create a correct root node", f)
 	
-	tester.addTest( testCanExpressionStackLogicPopCorrectRootNode() )
-		
+	tester.addTest( testCanParserStackQueryPopCorrectRootNode() )		
 
-	def make7Minus4Times8Tree(stack):
-		_logic = logic.ExpressionStackLogic()
+	def make7Minus4Times8Tree(stack):		
 		rootNode = exp.BinaryOperandExpression(4, '*', 8)			
 		
-		stack.pushNumber(7)
-		stack.pushOperator('-')
+		stack.push_expression(7)
+		stack.push_operator('-')
+		_logic = ParserStackInteractor(stack)
 
-		return _logic.popJoiningRootNodeToRightOperand(stack, rootNode)
-			
-	
+		leftOperand = _logic.pop_single_expression()
+		return _logic.pop_operator_and_create_binary_expression(leftOperand, rootNode)
+				
 	def test7Minus4Times8Tree(tree):
 		if not tree:
 			return "No root node created"
 			
-		if tree.leftOperand() != 7:
-			return "Root node left operand does not equal 7. Instead it equals: " + str(tree.leftOperand())
+		if tree._operandA != 7:
+			return "Root node left operand does not equal 7. Instead it equals: " + str(tree._operandA)
 
-		if not tree.rightOperand():
+		if not tree._operandB:
 			return "Root node has no right operand."
 
-		if tree.rightOperand().leftOperand() != 4:
-			return "Root node's right operand node's left operand does not equal 4. Instead it equals: " + str(tree.rightOperand().leftOperand())
+		if tree._operandB._operandA != 4:
+			return "Root node's right operand node's left operand does not equal 4. Instead it equals: " + str(tree._operandB._operandA)
 
-		if tree.rightOperand().rightOperand() != 8:
-			return "Root node's right operand node's right operand does not equal 8. Instead it equals: " + str(tree.rightOperand().rightOperand())
+		if tree._operandB._operandB != 8:
+			return "Root node's right operand node's right operand does not equal 8. Instead it equals: " + str(tree._operandB._operandB)
 
-		if tree.rightOperand().operator() != '*':
-			return "Root node's right operand node's operator does not equal '*'. Instead it equals: " + str(tree.rightOperand().operator())
+		if tree._operandB._operator != '*':
+			return "Root node's right operand node's operator does not equal '*'. Instead it equals: " + str(tree._operandB._operator)
 
-		if tree.operator() != '-':
-			return "Root node's operator does not equal '-'. Instead it equals: " + str(tree.operator())
+		if tree._operator != '-':
+			return "Root node's operator does not equal '-'. Instead it equals: " + str(tree._operator)
 		
 	def testCanJoinANodeAsRightOperand():
 		def f():	
-			stack = expstack.ExpressionStack()		
+			stack = ParserStack()		
 			newRootNode = make7Minus4Times8Tree(stack)
 			return test7Minus4Times8Tree(newRootNode)
 
@@ -106,37 +96,38 @@ def testExpressionStackOperations():
 
 
 	def make7Minus4Times8Plus3Tree(stack):
-		stack = expstack.ExpressionStack()		
+		stack = ParserStack()		
 		originalRootNode = make7Minus4Times8Tree(stack)
 		fail = test7Minus4Times8Tree(originalRootNode)
 			
 		if fail:	
 			raise ValueError(fail)		
 
-		stack.pushNumber(3)
-		stack.pushOperator('+')
+		stack.push_expression(3)
+		stack.push_operator('+')
 
-		_logic = logic.ExpressionStackLogic()
-		return _logic.popJoiningRootNodeToLeftOperand(stack, originalRootNode)
+		_logic = ParserStackInteractor(stack)
+		rightOperand = _logic.pop_single_expression()
+		return _logic.pop_operator_and_create_binary_expression(originalRootNode, rightOperand)		
 	
 	def test3PlusTree(tree):
 		if not tree:
 			return "No new root created"
 
-		if tree.rightOperand() != 3:
-			return "New root node's right operand does not equal 3. Instead it equals: " + str(newRootNode.rightOperand())
+		if tree._operandB != 3:
+			return "New root node's right operand does not equal 3. Instead it equals: " + str(tree._operandB)
 
-		if tree.operator() != '+':
-			return "New root node's operator does not equal '+'. Instead it equals: " + str(newRootNode.operator())
+		if tree._operator != '+':
+			return "New root node's operator does not equal '+'. Instead it equals: " + str(tree._operator)
 
-		leftOperand = tree.leftOperand()
+		leftOperand = tree._operandA
 
 		return test7Minus4Times8Tree(leftOperand)
 
 	def testCanJoinANodeAsLeftOperand():
 		def f():			
 			try:
-				stack = expstack.ExpressionStack()								
+				stack = ParserStack()								
 				newRootNode = make7Minus4Times8Plus3Tree(stack)
 				return test3PlusTree(newRootNode)				
 			except ValueError as err:
@@ -148,41 +139,38 @@ def testExpressionStackOperations():
 	def testCanJoinTwoNodesWithOperator():			
 		def f():			
 			try:
-				stack = expstack.ExpressionStack()								
+				stack = ParserStack()								
 				newRootNode = make7Minus4Times8Plus3Tree(stack)
 				fail = test3PlusTree(newRootNode)				
 				
 				if fail:
 					raise ValueError(fail)
 				
-				stack.pushNumber(4)
-				stack.pushNumber(2)
-				stack.pushOperator('/')
+				stack.push_expression(4)
+				stack.push_expression(2)
+				stack.push_operator('/')
 
-				_logic = logic.ExpressionStackLogic()
-				
-				rightNode = _logic.popRootNode(stack)
-
-				stack.pushOperator('-')
-				newTree = _logic.popOperatorAndJoinNodes(stack, newRootNode, rightNode)
+				_logic = ParserStackInteractor(stack)				
+				rightNode = _logic.pop_binary_expression()
+				stack.push_operator('-')
+				newTree = _logic.pop_operator_and_create_binary_expression(newRootNode, rightNode)
 				
 				if not newTree:
 					return "No new tree returned"
 
+				if newTree._operator != '-':
+					return "New tree operator does not equal '-'. Instead it equals: " + str(newTree._operator)
 
-				if newTree.operator() != '-':
-					return "New tree operator does not equal '-'. Instead it equals: " + str(newTree.operator())
+				if newTree._operandB._operator != '/':
+					return "New tree right operand operator does not equal '/'. Instead it equals: " + str(newTree._operandB._operator)
 
-				if newTree.rightOperand().operator() != '/':
-					return "New tree right operand operator does not equal '/'. Instead it equals: " + str(newTree.rightOperand().operator())
+				if newTree._operandB._operandA != 4:
+					return "New tree right operand left operand does not equal 4. Instead it equals: " +str(newTree._operandB._operandA)
 
-				if newTree.rightOperand().leftOperand() != 4:
-					return "New tree right operand left operand does not equal 4. Instead it equals: " +str(newTree.rightOperand().leftOperand())
+				if newTree._operandB._operandB != 2:
+					return "New tree right operand right operand does not equal 2. Instead it equals: " +str(newTree._operandB._operandB)  
 
-				if newTree.rightOperand().rightOperand() != 2:
-					return "New tree right operand right operand does not equal 2. Instead it equals: " +str(newTree.rightOperand().rightOperand())  
-
-				leftNode = newTree.leftOperand()
+				leftNode = newTree._operandA
 				
 				return test3PlusTree(leftNode)
 
