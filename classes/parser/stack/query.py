@@ -1,57 +1,63 @@
+from typing import Tuple
+
 from classes.parser.stack.stack import ParserStack
+from classes.expression.operators import Operator
 
 
 class ParserStackQuery:
     """This class is used for querying the state of a ParserStack
     """
-    
+
     def __init__(self, stack: ParserStack):
-        self.__isPoppingStack = False
+        self.__is_popping_stack: bool = False
         self._stack: ParserStack = stack
 
-    def setIsPoppingStack(self, isPoppingStack):
-        self.__isPoppingStack = isPoppingStack
+    def set_is_popping_stack(self, is_popping_stack: bool):
+        self.__is_popping_stack = is_popping_stack
 
-    def isPoppingStack(self):
-        return self.__isPoppingStack
+    def is_popping_stack(self) -> bool:
+        return self.__is_popping_stack
 
-    def isOperatorStackEmpty(self):
+    def is_operator_stack_empty(self) -> bool:
         return self._stack.operator_stack_size() == 0
-    
-    def is_number_stack_empty(self) -> bool:
+
+    def is_expression_stack_empty(self) -> bool:
         return self._stack.expression_stack_size() == 0
 
-    def isAwaitingOperator(self):
-        return self._stack.expression_stack_size() >= self._stack.operator_stack_size()
-
-    def isTopOperatorStackLowerPrecedence(self, operator):
+    def is_top_operator_lower_precedence(self, operator: Operator) -> bool:
         topOperator = self._stack.peek_operator()
         if topOperator:
             return topOperator.is_lower_precedence_than(operator)
         else:
             return False
 
-    def isTopOperatorStackSamePrecedence(self, operator):
+    def is_top_operator_same_precedence(self, operator: Operator) -> bool:
         topOperator = self._stack.peek_operator()
         if topOperator:
             return topOperator.is_same_precedence_as(operator)
         else:
             return False
 
-    def isNumberStackCountGreaterThanOperatorStackCount(self):
-        return self._stack.expression_stack_size() > self._stack.operator_stack_size()
+    def is_awaiting_operator(self) -> bool:
+        stack_sizes = self._stack_sizes()
+        return stack_sizes[0] >= stack_sizes[1]
 
-    def areBothStacksEmpty(self):
-        return self.isOperatorStackEmpty() and self.is_number_stack_empty()
+    def is_expression_stack_higher_than_operator_stack(self) -> bool:
+        stack_sizes = self._stack_sizes()
+        return stack_sizes[0] > stack_sizes[1]
 
-    def areBothStacksEqualSize(self):
-        return self._stack.expression_stack_size() == self._stack.operator_stack_size()
+    def are_both_stacks_empty(self) -> bool:
+        stack_sizes = self._stack_sizes()
+        return stack_sizes[0] == 0 and stack_sizes[1] == 0
 
-    def areBothStacksSizeOfOneAndCurrentlyPoppingStack(self):
-        return self.__isPoppingStack and self.areBothStacksSizeOfOne()
+    def are_both_stacks_equal_size(self) -> bool:
+        stack_sizes = self._stack_sizes()
+        return stack_sizes[0] == stack_sizes[1]    
 
-    def areBothStacksSizeOfOneAndCurrentlyNotPoppingStack(self):
-        return not self.__isPoppingStack and self.areBothStacksSizeOfOne()
+    def are_both_stacks_size_of_one(self) -> bool:
+        stack_sizes = self._stack_sizes()
+        return stack_sizes[0] == 1 and stack_sizes[1] == 1
 
-    def areBothStacksSizeOfOne(self):
-        return self._stack.expression_stack_size() == 1 and self._stack.operator_stack_size() == 1
+    def _stack_sizes(self) -> Tuple[int, int]:
+        stack = self._stack
+        return (stack.expression_stack_size(), stack.operator_stack_size())

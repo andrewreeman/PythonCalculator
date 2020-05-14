@@ -47,7 +47,7 @@ class ExpressionParser:
 
     def _parse_number(self, stream: StringStream) -> Optional[NumberExpression]:
         # if awaiting operator and it is a negative sign then this is an operator and not a number
-        if self._stack_interactor.query.isAwaitingOperator() and stream.peek() == '-':
+        if self._stack_interactor.query.is_awaiting_operator() and stream.peek() == '-':
             return None
 
         numberToken: Optional[NumberExpression] = self._numberParser.parse(stream)

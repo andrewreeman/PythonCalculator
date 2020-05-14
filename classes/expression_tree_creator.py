@@ -13,21 +13,21 @@ class ExpressionTreeCreator:
         logic = self._stack_interactor        
         query = self._stack_interactor.query
 
-        if query.areBothStacksEmpty():
+        if query.are_both_stacks_empty():
             self._stop_popping_stack()            
             return tree
 
         rootNode = tree        
         
-        if query.isOperatorStackEmpty():            
+        if query.is_operator_stack_empty():            
             rootNode = logic.popSingleNumber()    
-        elif logic.query.isNumberStackCountGreaterThanOperatorStackCount():            
+        elif query.is_expression_stack_higher_than_operator_stack():            
             self._start_popping_stack()            
             rootNode = logic.popRootNode()            
-        elif logic.query.areBothStacksSizeOfOneAndCurrentlyPoppingStack():                        
+        elif query.are_both_stacks_size_of_one() and query.is_popping_stack():                        
             leftOperand = logic.popSingleNumber()
             rootNode = logic.popOperatorAndJoinNodes(leftOperand, tree)        
-        elif logic.query.areBothStacksSizeOfOneAndCurrentlyNotPoppingStack():            
+        elif query.are_both_stacks_size_of_one() and not query.is_popping_stack():                       
             rightOperandNode = logic.popSingleNumber()
             rootNode = logic.popOperatorAndJoinNodes(tree, rightOperandNode)
         else:
@@ -37,7 +37,7 @@ class ExpressionTreeCreator:
         return self._createNodeFromStack(depth + 1, rootNode)
     
     def _start_popping_stack(self):
-        self._stack_interactor.query.setIsPoppingStack(True)
+        self._stack_interactor.query.set_is_popping_stack(True)
 
     def _stop_popping_stack(self):        
-        self._stack_interactor.query.setIsPoppingStack(False)
+        self._stack_interactor.query.set_is_popping_stack(False)

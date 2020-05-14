@@ -34,9 +34,9 @@ class ParserStackInteractor:
         if not operatorToken:
             return
         
-        if self.query.isOperatorStackEmpty() or self.query.isTopOperatorStackLowerPrecedence(operatorToken):
+        if self.query.is_operator_stack_empty() or self.query.is_top_operator_lower_precedence(operatorToken):
             self._stack.push_operator(operatorToken)                                                                                               
-        elif self._stack.expression_stack_size() >= 2 and self._stack.operator_stack_size() >= 1 and self.query.isTopOperatorStackSamePrecedence(operatorToken):
+        elif self._stack.expression_stack_size() >= 2 and self._stack.operator_stack_size() >= 1 and self.query.is_top_operator_same_precedence(operatorToken):
 
             # this should be replaceable with single call to expression_creator() but this does not work
             operandB = self._stack.pop_expression()
