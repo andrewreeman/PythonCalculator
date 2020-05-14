@@ -18,6 +18,13 @@ class ParserStackQuery:
     def can_create_right_operand(self) -> bool:
         return self.are_both_stacks_size_of_one() and not self.is_popping_stack()
 
+    def can_create_expression_with_same_precedence(self, operator: Operator) -> bool:
+        are_stacks_ready = self._stack.expression_stack_size() >= 2 and self._stack.operator_stack_size() >= 1
+        return are_stacks_ready and self.is_top_operator_same_precedence(operator)
+
+    def can_create_expression_with_lower_precedence(self, operator: Operator) -> bool:
+        return not self.is_top_operator_lower_precedence(operator)
+
     def set_is_popping_stack(self, is_popping_stack: bool):
         self.__is_popping_stack = is_popping_stack
 
@@ -58,7 +65,7 @@ class ParserStackQuery:
 
     def are_both_stacks_equal_size(self) -> bool:
         stack_sizes = self._stack_sizes()
-        return stack_sizes[0] == stack_sizes[1]  
+        return stack_sizes[0] == stack_sizes[1]
 
     def are_both_stacks_size_of_one(self) -> bool:
         stack_sizes = self._stack_sizes()

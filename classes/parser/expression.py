@@ -34,7 +34,7 @@ class ExpressionParser:
 
             operatorToken = self._parse_operator(stream)
             
-            self._stack_interactor.pushOperatorToken(operatorToken, self._tree.create_expression)
+            self._stack_interactor.push_operator(operatorToken, self._tree.create_expression)
             
             if stream.peek() == '(':
                 stream.next()                
@@ -53,7 +53,7 @@ class ExpressionParser:
         numberToken: Optional[NumberExpression] = self._numberParser.parse(stream)
 
         if numberToken:
-            self._stack_interactor.pushNumberToken(numberToken)            
+            self._stack_interactor.push_expression(numberToken)            
 
         return numberToken
 
@@ -63,7 +63,7 @@ class ExpressionParser:
     def _evaluate_bracket_expression(self, stream):
         new_interactor = ParserStackInteractor(ParserStack())
         bracket_expression_parser = ExpressionParser(new_interactor, self._numberParser, self._operatorParser)
-        self._stack_interactor.pushNumberToken(bracket_expression_parser.parse(stream))
+        self._stack_interactor.push_expression(bracket_expression_parser.parse(stream))
         
         if stream.peek() == ')':
             stream.next()    

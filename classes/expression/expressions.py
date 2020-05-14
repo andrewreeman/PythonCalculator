@@ -15,11 +15,12 @@ class Expression:
 
 
 class BinaryOperandExpression(Expression):
-    def __init__(self,
-                 operandA: Expression,
-                 operator: Operator,
-                 operandB: Expression):
-
+    def __init__(
+      self,
+      operandA: Expression,
+      operator: Operator,
+      operandB: Expression
+    ):
         self._operandA: Expression = operandA
         self._operator: Operator = operator
         self._operandB: Expression = operandB

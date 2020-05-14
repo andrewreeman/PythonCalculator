@@ -25,9 +25,7 @@ def testExpressionStackOperations():
 
 			if not stack.operator_stack_size() == 3:
 				return "Operator stack size does not equal 3. Instead it equals: %d" % stack.operator_stack_size()
-		return utils.Test("Test that correct operator size is reported", f)	
-		
-	tester.addTest(testCorrectOperatorSizeReported())	
+		return utils.Test("Test that correct operator size is reported", f)
 
 	def testCanParserStackQueryPopCorrectRootNode():
 		def f():
@@ -37,7 +35,7 @@ def testExpressionStackOperations():
 			stack.push_operator("+")
 			
 			_logic = ParserStackInteractor(stack)
-			rootNode = _logic.popRootNode()
+			rootNode = _logic.pop_binary_expression()
 
 			if not rootNode:
 				return "No root node created"
@@ -62,8 +60,8 @@ def testExpressionStackOperations():
 		stack.push_operator('-')
 		_logic = ParserStackInteractor(stack)
 
-		leftOperand = _logic.popSingleNumber()
-		return _logic.popOperatorAndJoinNodes(leftOperand, rootNode)
+		leftOperand = _logic.pop_single_expression()
+		return _logic.pop_operator_and_create_binary_expression(leftOperand, rootNode)
 				
 	def test7Minus4Times8Tree(tree):
 		if not tree:
@@ -109,8 +107,8 @@ def testExpressionStackOperations():
 		stack.push_operator('+')
 
 		_logic = ParserStackInteractor(stack)
-		rightOperand = _logic.popSingleNumber()
-		return _logic.popOperatorAndJoinNodes(originalRootNode, rightOperand)		
+		rightOperand = _logic.pop_single_expression()
+		return _logic.pop_operator_and_create_binary_expression(originalRootNode, rightOperand)		
 	
 	def test3PlusTree(tree):
 		if not tree:
@@ -153,9 +151,9 @@ def testExpressionStackOperations():
 				stack.push_operator('/')
 
 				_logic = ParserStackInteractor(stack)				
-				rightNode = _logic.popRootNode()
+				rightNode = _logic.pop_binary_expression()
 				stack.push_operator('-')
-				newTree = _logic.popOperatorAndJoinNodes(newRootNode, rightNode)
+				newTree = _logic.pop_operator_and_create_binary_expression(newRootNode, rightNode)
 				
 				if not newTree:
 					return "No new tree returned"
