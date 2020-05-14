@@ -12,6 +12,12 @@ class ParserStackQuery:
         self.__is_popping_stack: bool = False
         self._stack: ParserStack = stack
 
+    def can_create_left_operand(self) -> bool:
+        return self.are_both_stacks_size_of_one() and self.is_popping_stack()
+
+    def can_create_right_operand(self) -> bool:
+        return self.are_both_stacks_size_of_one() and not self.is_popping_stack()
+
     def set_is_popping_stack(self, is_popping_stack: bool):
         self.__is_popping_stack = is_popping_stack
 
@@ -52,7 +58,7 @@ class ParserStackQuery:
 
     def are_both_stacks_equal_size(self) -> bool:
         stack_sizes = self._stack_sizes()
-        return stack_sizes[0] == stack_sizes[1]    
+        return stack_sizes[0] == stack_sizes[1]  
 
     def are_both_stacks_size_of_one(self) -> bool:
         stack_sizes = self._stack_sizes()
