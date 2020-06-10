@@ -37,18 +37,19 @@ class ExpressionParser:
 
             self._consume_operator(stream)
 
-            if stream.peek() == '(' or self._stack_interactor.query.top_operator_is_right_associative():
-                print("Evaluating bracket expression")
-                if stream.peek() == '(':
-                    stream.next()
-                self._evaluate_bracket_expression(stream)
+            if self._stack_interactor.query.top_operator_is_right_associative():
+                self._evaluate_dependent_expression(stream)
+
+            if stream.peek() == '(':
+                stream.next()
+                self._evaluate_dependent_expression(stream)
 
         return self._tree.create_expression()
 
-    def _evaluate_bracket_expression(self, stream):
+    def _evaluate_dependent_expression(self, stream):
         new_interactor = ParserStackInteractor(ParserStack())
-        bracket_expression_parser = ExpressionParser(new_interactor, self._number_parser, self._operator_parser)
-        self._stack_interactor.push_expression(bracket_expression_parser.parse(stream))
+        new_expression_parser = ExpressionParser(new_interactor, self._number_parser, self._operator_parser)
+        self._stack_interactor.push_expression(new_expression_parser.parse(stream))
 
         if stream.peek() == ')':
             stream.next()

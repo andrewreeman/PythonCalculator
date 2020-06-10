@@ -92,7 +92,7 @@ def main(_tester: Optional[utils.Tester] = None):
     addTest("2^(6+2)", 256)
     addTest("2^6+2", 256)
     addTest("2^8+2-2", 256)
-    # addTest("2^(8+2)-2", 256)
+    addTest("2^(8+2)-2", 256)
 
     if _tester is None:
         tester.perform()
