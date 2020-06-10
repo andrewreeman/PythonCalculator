@@ -26,7 +26,7 @@ class Operator:
         """
         raise NotImplementedError()
 
-    def is_lower_precedence_than(self, operator: Operator):    
+    def is_lower_precedence_than(self, operator: Operator):        
         return self.precedence() < operator.precedence()
 
     def is_same_precedence_as(self, operator: Operator):

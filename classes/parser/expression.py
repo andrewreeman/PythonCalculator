@@ -38,7 +38,7 @@ class ExpressionParser:
             self._consume_operator(stream)
 
             if self._stack_interactor.query.top_operator_is_right_associative():
-                self._evaluate_dependent_expression(stream)
+                self._evaluate_right_associativity_expression(stream)
 
             if stream.peek() == '(':
                 stream.next()
@@ -53,6 +53,11 @@ class ExpressionParser:
 
         if stream.peek() == ')':
             stream.next()
+    
+    def _evaluate_right_associativity_expression(self, stream):
+        new_interactor = ParserStackInteractor(ParserStack())
+        new_expression_parser = ExpressionParser(new_interactor, self._number_parser, self._operator_parser)
+        self._stack_interactor.push_expression(new_expression_parser.parse(stream))        
 
     def _can_consume(self, stream: StringStream) -> bool:
         return self._is_open_bracket(stream) or self._can_child_parser_consume(stream)

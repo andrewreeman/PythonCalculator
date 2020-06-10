@@ -93,6 +93,13 @@ def main(_tester: Optional[utils.Tester] = None):
     addTest("2^6+2", 256)
     addTest("2^8+2-2", 256)
     addTest("2^(8+2)-2", 256)
+    addTest("2^5^2", 33554432)
+    addTest("(2^5^2)+1", 33554433)
+    addTest("(2^5^2) + 1", 33554433)
+    addTest("(2^5^2)+2^2", 33554436)
+    addTest("(2^5^2) + 2^2", 33554436)
+    addTest("(2^5^2)+(2^2)", 33554436)
+    # addTest("(2^5^2) + (2^2)", 33554436)
 
     if _tester is None:
         tester.perform()
