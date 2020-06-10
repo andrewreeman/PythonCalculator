@@ -37,8 +37,10 @@ class ExpressionParser:
 
             self._consume_operator(stream)
 
-            if stream.peek() == '(':
-                stream.next()
+            if stream.peek() == '(' or self._stack_interactor.query.top_operator_is_right_associative():
+                print("Evaluating bracket expression")
+                if stream.peek() == '(':
+                    stream.next()
                 self._evaluate_bracket_expression(stream)
 
         return self._tree.create_expression()
@@ -57,14 +59,18 @@ class ExpressionParser:
     def _consume_number(self, stream: StringStream) -> bool:
         number_token: Optional[NumberExpression] = self._parse_number(stream)
         if number_token:
+            print("Consumed number " + str(number_token))
             self._stack_interactor.push_expression(number_token)
             return True
         return False
 
     def _consume_operator(self, stream: StringStream):
         operator_token: Optional[Operator] = self._parse_operator(stream)
-        if self._stack_interactor.should_create_expression_before_pushing(operator_token):
+        if self._stack_interactor.should_create_expression_before_pushing(operator_token):            
+            print("Creating expression after consuming operator!")
+            print("\n" + self._stack_interactor.stack_string() + "\n")
             self._tree.create_expression()
+
         self._stack_interactor.push_operator(operator_token)
 
     def _parse_number(self, stream: StringStream) -> Optional[NumberExpression]:

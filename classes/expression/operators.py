@@ -26,11 +26,14 @@ class Operator:
         """
         raise NotImplementedError()
 
-    def is_lower_precedence_than(self, operator: Operator):
+    def is_lower_precedence_than(self, operator: Operator):    
         return self.precedence() < operator.precedence()
 
     def is_same_precedence_as(self, operator: Operator):
         return self.precedence() == operator.precedence()
+
+    def is_left_to_right_associative(self) -> bool:
+        return True
 
 
 class AddOperator(Operator):
@@ -75,3 +78,18 @@ class DivideOperator(Operator):
 
     def __str__(self):
         return "/"
+
+
+class PowerOperator(Operator):
+    def operation(self) -> OperatorEvaluator:
+        return lambda a, b: a ** b
+
+    def is_left_to_right_associative(self) -> bool:
+        print("Power operator queried for associativity")
+        return False
+
+    def precedence(self):
+        return 2
+
+    def __str__(self):
+        return "^"

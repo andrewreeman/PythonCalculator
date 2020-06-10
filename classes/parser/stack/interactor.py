@@ -59,3 +59,7 @@ class ParserStackInteractor:
             return False
 
         return self.query.can_create_expression_with_lower_precedence(operator)
+    
+    def stack_string(self):
+        return str(self._stack)
+        

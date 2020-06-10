@@ -37,11 +37,12 @@ class ParserStackQuery:
     def is_expression_stack_empty(self) -> bool:
         return self._stack.expression_stack_size() == 0
 
-    def is_top_operator_lower_precedence(self, operator: Operator) -> bool:
+    def is_top_operator_lower_precedence(self, operator: Operator) -> bool:                
         topOperator = self._stack.peek_operator()
         if topOperator:
             return topOperator.is_lower_precedence_than(operator)
         else:
+            print("Top operator is none")
             return False
 
     def is_top_operator_same_precedence(self, operator: Operator) -> bool:
@@ -70,6 +71,13 @@ class ParserStackQuery:
     def are_both_stacks_size_of_one(self) -> bool:
         stack_sizes = self._stack_sizes()
         return stack_sizes[0] == 1 and stack_sizes[1] == 1
+
+    def top_operator_is_right_associative(self) -> bool:
+        operator = self._stack.peek_operator()
+        
+        if operator is None:
+            return False        
+        return not operator.is_left_to_right_associative()
 
     def _stack_sizes(self) -> Tuple[int, int]:
         stack = self._stack

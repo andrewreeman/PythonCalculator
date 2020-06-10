@@ -46,11 +46,16 @@ class ParserStack:
 
     def __str__(self):
         description = "Stack contents\n Expression stack: \n"
+        
+        if(len(self._expression_stack) == 0):
+            description += "empty!"
 
         for n in reversed(self._expression_stack):
             description += "\t%s\n" % str(n)
 
         description += "\n\tOperator stack: \n"
+        if(len(self._operator_stack) == 0):
+            description += "empty!"
 
         for o in reversed(self._operator_stack):
             description += "\t%s\n" % str(o)

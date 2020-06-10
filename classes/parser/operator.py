@@ -1,6 +1,6 @@
 from typing import Optional
 
-from classes.expression.operators import AddOperator, SubtractOperator, MultiplyOperator, DivideOperator, Operator
+from classes.expression.operators import AddOperator, SubtractOperator, MultiplyOperator, DivideOperator, PowerOperator, Operator
 from classes.string_stream import StringStream
 
 
@@ -19,6 +19,8 @@ class OperatorParser:
             return MultiplyOperator()
         elif token == '/':
             return DivideOperator()
+        elif token == "^":
+            return PowerOperator()
         elif token.isspace():
             return self.parse(stream)
 
